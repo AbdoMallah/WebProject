@@ -2,6 +2,8 @@ body{
     max-width: 1000px;
     margin: auto;
 }
+/* ==== header Section ==== */
+
 header{
     max-width: 1000px;
     max-height: 150px;
@@ -12,7 +14,6 @@ header{
     align-items: center;
     background-color:#fff;
 }
-/* ==== Meny Section ==== */
 #Meny {
     padding-left:0px;
     padding-top: 5px;
@@ -23,7 +24,6 @@ header{
 #Meny li{
     display: inline-flex;
     flex-direction:  row;
-    padding: 2px;
     font-size: larger;
     border-style: solid;
     border-radius: 4px;;
@@ -31,6 +31,10 @@ header{
     border-color: #5755d9;
     color: white;
 }
+#loginBtn{
+    margin-right:5px;
+}
+
 /* ==== Links Sections ==== */
 a{
     color: #000;
@@ -50,7 +54,7 @@ a:hover{
     background-color:white;
     color: #7171e2;
 }
-/* ==== Posts Section ==== */
+/* ==== Posts Section On Home page ==== */
 .posts{
     margin-top: 50px;
     margin: auto;
@@ -91,9 +95,6 @@ a:hover{
 
 /* ==== Buttons Section ==== */
 
-#loginBtn{
-    margin-right:5px;
-}
 
 /* ==== Footer ==== */
 .footer{
@@ -122,8 +123,68 @@ a:hover{
 }
 
 /* ==== Contact Page ==== */
+.bodySize{
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 #contactForm{
-    width: 450px;
+    width: 500px;
     align-items: center;
+    text-align: center;
+}
+#ContactTitle{
+    border-radius: 2px;
+    border-width: 5px;
+    border-bottom: solid;
+    text-align: center;
+}
+
+#sendBtn{
+    width: 100%;
+}
+#sendBtn:hover{
+    color:white;
+    font-size: 20px;
+    background-color: #5755d9;
+}
+
+/* ==== Post page ==== */
+
+.postSection{
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.postIMG{
+    max-width: 100%;
+    border-radius: 5px;
+}
+.postInfo{
+    width: 100%;
+    max-width: 1000px;
+    margin-left: 1%;
+    text-align:  center;
+}
+.postTitle{
+    border-radius: 2px;
+    border-width: 5px;
+    border-bottom: solid;
+    text-align: center;
+}
+.sellerSection{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+.sellerSection h3{
+    border-radius: 2px;
+    border-width: 5px;
+    border-bottom: solid;
+    text-align: center;
 }
