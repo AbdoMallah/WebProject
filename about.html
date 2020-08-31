@@ -4,17 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="node_modules/spectre.css/dist/spectre.css">
-    <link rel="stylesheet" href="cssFile.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>About Page</title>
 </head>
 <body>
-    <header> 
-        <ul id = "Meny"> 
-            <li><a href= "index.html"   class= "menyLink">Home    </a></li>
-            <li><a href= "about.html"  class= "menyLink">About    </a></li>
-            <li><a href= "contact.html" class= "menyLink">Contact </a></li>
-        </ul>
-        <button class = "btn" id = "loginBtn"> Login </button>
+    <header>
+        <div class="topnav">
+            <a class="active" href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <div class="search-container">
+              <form action="/action_page.Nodejs">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit"><i class="fa fa-search"></i></button>
+              </form>
+            </div>
+          </div>
     </header>
     
     <hr>

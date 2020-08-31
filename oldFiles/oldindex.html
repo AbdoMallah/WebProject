@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="node_modules/spectre.css/dist/spectre.css">
+    <link rel="stylesheet" href="cssFile.css">
+    <title>Home Page</title>
+</head>
+<body>
+
+    <header>
+        <div id = "Meny">
+            <label for="hamMeny"> &#9776 </label>
+            <input type="checkbox" id="hamMeny">
+            <ul id = "MenyList"> 
+                <li><a href= "index.html"   class= "menyLink">Home    </a></li>
+                <li><a href= "about.html"   class= "menyLink">About    </a></li>
+                <li><a href= "contact.html" class= "menyLink">Contact </a></li>
+            </ul>
+        </div>
+        <form action="/action_page.php">
+      <input type="text" placeholder="Search.." name="search">
+      <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+        <button class = "btn" id = "loginBtn"> Login </button>
+    </header>
+
+    <br>
+    <hr>
+    <br>
+
+    <section class = "bodySize"> 
+    <section class = "posts">
+        <a href="post.html" class = "postLink">
+        <section class = "post"> 
+            <img src="IMG/shoes.jpg" class= "img-responsive" alt = "Post Image"> </img>
+            <div id = "postInfo">
+                <h3>Post Title</h3>
+                <p id = "postParagraph">Test Lorum ipsum tetetetetetetetetetet</p>
+            </div>
+        </section>
+        </a>        
+    </section>
+    </section>
+    
+    <br>
+
+    <footer> 
+    <div class ="footer">
+        <div class = "FootSec"> 
+            <h4>Contact</h4>
+            <ul> 
+                <a href = "contact.html"><li>Email: service@pickngo.com</li></a>
+                <li>Phone Number: 07 xxxxxxxxx </li>
+            </ul>
+        </div>
+        <div class = "FootSec"> 
+            <a href = "about.html">
+                <h4>About</h4>
+                <p id = "AboutSummary">In This Page, You can buy used stuff from Me in a very good condition</p>
+            </a>
+        </div>
+    </div>
+    <p id = "CopyR"> &copy;2020,maab19rl</p>
+    </footer>
+</body>
+</html>
