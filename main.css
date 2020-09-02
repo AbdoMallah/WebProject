@@ -55,11 +55,54 @@ body {
     background: #ccc;
   }
   
-
+/* === Body Section === */
+.bodySection{
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+/* === Lastest Posts  === */
+.LastestPosts{
+  width: 18%;
+  max-width: 20%;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-content: center;
+  border-style: solid;
+  border-color: #0B1457;
+  border-width: 2px;
+  border-radius: 5px;
+}
+.lastPost{
+  margin: auto;
+  border-bottom-style: solid;
+  border-width: 2px;
+  border-color: grey;
+  width: 90%;
+  max-height: 150px;
+  margin-bottom: 10px;
+  padding: 2px;
+}
+.test{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+}
+.test h4{
+  color: black;
+  max-width: 60%;
+}
+.test p{
+  max-width: 40%;
+  font-size: 10px;
+}
 /* === Posts === */
 .posts{
-    margin: auto;
-    max-width: 80%;
+    width: 78%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -79,7 +122,8 @@ body {
     display: flex; 
     flex-direction: column;
     justify-content: space-between;
-}
+    margin-top: 20px;
+  }
 
 .post:hover{
     background-color: #fff;
@@ -109,7 +153,7 @@ body {
 .footer{
   height: 200px;
   max-height: 300px;
-  background-color: #064716;
+  background-color: #0B1457;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -134,6 +178,7 @@ body {
 
 
   @media screen and (max-width: 600px) {
+    /* === Mobile Nav Section === */
     .topnav .search-container {
       float: none;
     }
@@ -148,5 +193,45 @@ body {
     .topnav input[type=text] {
       border: 1px solid #ccc;  
     }
+    /* === Mobile Posts Section === */
+    .posts{
+      margin: auto;
+      max-width: 90%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    
+    .post{
+        max-width: 100%;
+        height: 100%;
+        max-height: 500px;
+        padding: 5px;
+        border-style: solid;
+        border-radius: 5px;
+        border-width: 2px;
+        border-color: #0B1457;
+        background-color: #fff;
+        display: flex; 
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    /* === Mobile Footer Section === */
+    .footer{
+      height: 100%;
+      max-height: 550px;
+      max-width: 100%;
+      background-color: #0B1457;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .FootSec{
+      margin-top: 20px;
+      max-width:90%;
+    }
   }
-  /* 08631F */
