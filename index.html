@@ -15,11 +15,13 @@
             <a class="active" href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
+            <a  id = "LoginBtn" href="Login.html">Login</a>
+            <a  id = "AccountBtn" href="Account.html">Account</a>
             <div class="search-container">
-                <form action="/action_page.Nodejs">
-                    <input type="text" placeholder="Search.." name="search">
-                    <button type="submit"><i class="fa fa-search"></i></button>
-                </form>
+              <form action="/action_page.Nodejs">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit"><i class="fa fa-search"></i></button>
+              </form>
             </div>
         </div>
     </header>
@@ -33,10 +35,12 @@
                     <h3>Post Title</h3>
                     <p id = "postParagraph">Test Lorum ipsum tetetetetetetetetetet</p>
                 </div>
+                <button id = "editBtn"> Edit </button> <!-- If inlogged -->
             </section>
             </a>   
         </div>
         <div class = "LastestPosts">
+            <h3>Lastest Posts</h3>
             <div class = "lastPost">
                 <a> 
                     <div class="test">
@@ -53,7 +57,7 @@
     <footer> 
         <div class ="footer">
             <div class = "FootSec"> 
-                <h4>Contact</h4>
+                <h4>Contact <span> US </span></h4>
                 <ul> 
                     <a href = "contact.html"><li>Email: service@pickngo.com</li></a>
                     <li>Phone Number: 07 xxxxxxxxx </li>
@@ -61,7 +65,7 @@
             </div>
             <div class = "FootSec"> 
                 <a href = "about.html">
-                    <h4>About</h4>
+                    <h4>About <span> pickNgo </span></h4>
                     <p id = "AboutSummary">In This Page, You can buy used stuff from Me in a very good condition</p>
                 </a>
             </div>

@@ -17,11 +17,19 @@ body {
     text-decoration: none;
     font-size: 17px;
   }
-  
+  .topnav #LoginBtn{
+    background-color: #ED1457;
+  }
   .topnav a:hover {
     background-color: #ddd;
     color: black;
   }
+  .topnav #AccountBtn{
+    background-color: #00A111 
+  }
+  #LoginBtn:hover, #AccountBtn:hover{
+    background-color: #ddd;
+    color: black;  }
   
   .topnav a.active {
     background-color: #2196F3;
@@ -32,6 +40,8 @@ body {
     float: right;
   }
   
+ 
+
   .topnav input[type=text] {
     padding: 6px;
     margin-top: 8px;
@@ -77,6 +87,15 @@ body {
   border-width: 2px;
   border-radius: 5px;
 }
+.LastestPosts h3{
+  text-align: center;
+  border-width: 2px;
+  border-bottom-style: solid;
+  border-color: #ED1457 ;
+  color: white;
+  background-color: #0B1457;
+}
+
 .lastPost{
   margin: auto;
   border-bottom-style: solid;
@@ -112,7 +131,7 @@ body {
 
 .post{
     max-width: 250px;
-    height: 300px;
+    height: 350px;
     padding: 5px;
     border-style: solid;
     border-radius: 5px;
@@ -147,7 +166,16 @@ body {
     text-align: center;
     display: inline-block;
     text-decoration: none;
-
+}
+#editBtn{
+  border: 2px solid #0B1457;
+  background-color: #ED1457;
+  border-radius: 5px;
+}
+#editBtn:hover{
+  background-color: #2196F3;
+  color: #fff;
+  border-radius: 5px;
 }
 /* ==== Footer ==== */
 .footer{
@@ -167,6 +195,12 @@ body {
   flex-wrap: wrap;
 
 }
+.FootSec span{
+  color: #ED1457;
+}
+.FootSec a:hover{
+  text-decoration: none;
+}
 #AboutSummary{
   color: white;
   width: 80%;
@@ -176,8 +210,93 @@ body {
   text-align: end;
 }
 
+/* === Contact Page === */
 
-  @media screen and (max-width: 600px) {
+#contactForm{
+  max-width: 500px;
+  margin: auto;
+}
+#sendBtn{
+  width: 100%;
+  Color: #0B1457;
+  border-color: #0B1457;
+}
+#sendBtn:hover{
+  color: White;
+  background-color: #0B1457;
+}
+#ContactTitle span{
+  color: #ED1457;
+
+}
+
+/* === About Page === */
+
+.AboutSection{
+  max-width: 800px;
+  width: 100%;
+  display: block;
+  margin:auto;
+}
+.AboutSection h2{
+  background-color: #0B1457;
+  color: white;
+  text-align: center;
+  border-radius:2px; 
+  padding-top:5px;
+  padding-bottom: 5px;  
+}
+.AboutSection span{
+  color: #ED1457;
+}
+
+
+/* === Posts Page === */
+
+.postSection{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: auto;
+  align-items: center;
+  max-width: 1300px;
+  width: 90%;
+}
+#postDiv{
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  padding-left:10px; 
+}
+
+.sellerContact{
+  display: flex;
+  flex-direction: row; 
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+@media screen and (max-width: 1000px){
+  /* === Tab Post Page === */
+ 
+  .postSection{
+    display: flex;
+    flex-direction: column;
+  }
+  #postDiv{
+    width: 100%;
+    max-width: 500px;
+  }
+  .postSection img{
+    border-radius: 5px;
+    border: 2px solid #0B1457;
+  }
+  .sellerContact{
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 650px) {
     /* === Mobile Nav Section === */
     .topnav .search-container {
       float: none;
@@ -218,6 +337,13 @@ body {
         flex-direction: column;
         justify-content: space-between;
     }
+    .LastestPosts{
+      display: none;
+    }
+
+    /* === Mobile Post Page === */
+
+
     /* === Mobile Footer Section === */
     .footer{
       height: 100%;
