@@ -10,7 +10,8 @@ let db = new sqlite3.Database("database.db")
 /* === Admin Info === */
 const USERNAME = "ADMIN";
 const PASSWORD = "test123";
-var status =0;
+var status = 0;
+var test = 000;
 /* === DataBase === */ 
 function createTable(){
     var postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL,  PosterID NUMBER INTEGER , FOREIGN KEY (PosterID) REFERENCES users (Id))";
