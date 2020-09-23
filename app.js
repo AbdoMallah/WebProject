@@ -4,25 +4,20 @@ const app = express()
 const sqlite3 = require('sqlite3')
 var http = require('http')
 var fs = require('fs')
-const port = 8000
+const port = 8080
 let db = new sqlite3.Database("database.db") 
 
-/* === Admin Info === */
-const USERNAME = "ADMIN";
-const PASSWORD = "test123";
-var status = 0;
-var test = 000;
 /* === DataBase === */ 
 function createTable(){
-    var postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL,  PosterID NUMBER INTEGER , FOREIGN KEY (PosterID) REFERENCES users (Id))";
+    var postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL)";
     db.run(postQuery, function(error){
         if(error){  return console.error(error.message);    }
         else{   console.log("Query Successfully exectued"); }
     })
 }
 
-function insertPostInfo(Title, Description, Prise, Image, PosterID){
-    var insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image', 'PosterID') VALUE ("+ Title +", "+ Description +","+ Prise +"," + Image +","+ PosterID + ")";
+function insertPostInfo(Title, Description, Prise, Image){
+    var insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES ('" + Title + "', '" + Description + "','" + Prise + "','" + Image + "')";
     db.run(insertQuery, function(error){
         if(error){  return console.error(error.message);    }
         else{   console.log("Query Successfully exectued"); }
@@ -43,20 +38,20 @@ function selectPost(Id){
     })
 }
 function updatePost(Id, Title, Description, Prise, Image){
-    var selectQuery = "UPDATE posts SET Title = "+Title+", Description = "+Description +", Prise = "+Prise+",Image = "+Image+"  WHERE Id ==" + Id;
+    var selectQuery = "UPDATE posts SET Title = " ||Title|| ", Description = "|| Description ||", Prise = "|| Prise ||",Image = "||Image||"  WHERE Id ==" || Id;
     db.run(selectQuery, function(error){
         if(error){  return console.error(error.message);    }
         else{   console.log("Query Successfully exectued"); }
     })
 }
 
+createTable();
+insertPostInfo('Test2', 'hehek jieu e erea', '400', 'test1.jpg');
+
 /* === Express-Handlebars === */ 
-app.set('view engine', 'handlebars');
 app.engine('hbs', expresshandlebars({
     defaultLayout: 'main.hbs',
-    layoutsDir: __dirname + '/views/layouts',
-    partialsDir: __dirname + '/views/partials',
-    extname: 'hbs',
+    layoutsDir: __dirname + '/views/layouts/'
 }))
 
 app.use(express.static('node_modules/spectre.css/dist'))
@@ -64,7 +59,7 @@ app.use(express.static('CSS'))
 app.use(express.static('views/images')) 
 /* ===== Render ===== */
 app.get('/', (req, res) => {
-    res.render('index.hbs',{status})
+    res.render('index.hbs')
 })
 app.get('/login', (req, res) => {
     res.render('login.hbs')
@@ -86,3 +81,21 @@ app.listen(port);
 
 
 
+
+
+
+
+
+// function onRequest(request, response){
+//     response.writeHead(200, {'Content-Type': 'text/html'})
+//     fs.readFile('./index.html', null, function(error, data){
+//         if(error){
+//         response.writeHead(404)
+//         response.write("File not found! :C")}
+//         else{
+//             response.write(data)
+//         }
+//         response.end()
+//     })
+// }
+// http.createServer(onRequest).listen(port)
