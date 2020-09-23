@@ -7,6 +7,10 @@ var fs = require('fs')
 const port = 8000
 let db = new sqlite3.Database("database.db") 
 
+/* === Admin Info === */
+const USERNAME = "ADMIN";
+const PASSWORD = "test123";
+var status =0;
 /* === DataBase === */ 
 function createTable(){
     var postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL,  PosterID NUMBER INTEGER , FOREIGN KEY (PosterID) REFERENCES users (Id))";
@@ -46,8 +50,12 @@ function updatePost(Id, Title, Description, Prise, Image){
 }
 
 /* === Express-Handlebars === */ 
+app.set('view engine', 'handlebars');
 app.engine('hbs', expresshandlebars({
-    defaultLayout: 'main.hbs'
+    defaultLayout: 'main.hbs',
+    layoutsDir: __dirname + '/views/layouts',
+    partialsDir: __dirname + '/views/partials',
+    extname: 'hbs',
 }))
 
 app.use(express.static('node_modules/spectre.css/dist'))
@@ -55,7 +63,7 @@ app.use(express.static('CSS'))
 app.use(express.static('views/images')) 
 /* ===== Render ===== */
 app.get('/', (req, res) => {
-    res.render('index.hbs')
+    res.render('index.hbs',{status})
 })
 app.get('/login', (req, res) => {
     res.render('login.hbs')
@@ -77,21 +85,3 @@ app.listen(port);
 
 
 
-
-
-
-
-
-// function onRequest(request, response){
-//     response.writeHead(200, {'Content-Type': 'text/html'})
-//     fs.readFile('./index.html', null, function(error, data){
-//         if(error){
-//         response.writeHead(404)
-//         response.write("File not found! :C")}
-//         else{
-//             response.write(data)
-//         }
-//         response.end()
-//     })
-// }
-// http.createServer(onRequest).listen(port)
