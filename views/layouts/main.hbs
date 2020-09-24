@@ -15,8 +15,11 @@
             <a class="active" href="/">Home</a>
             <a href="about">About</a> 
             <a href="contact">Contact</a>
+        {{#if status}}
             <a  id = "LoginBtn" href="login">Login</a>
-            <a  id = "SettingsBtn" href="setting">Settings</a>
+        {{else}}
+            <a  id = "UploadBtn" href="upload">Upload</a>
+        {{/if}}
             <div class="search-container">
               <form action="/action_page.Nodejs">
                 <input type="text" placeholder="Search.." name="search">

@@ -1,12 +1,14 @@
     <section id = "contactForm">
         <h2 id = "ContactTitle">Login</h2>
         <div class="form-group">
-            <label class="form-label" for="Email"> Email *</label>
-            <input class="form-input" type="text" placeholder="Ex: example@example.com">
-            
-            <label class="form-label" for="Password"> Password (6 Characters at leats)*</label>
-            <input class="form-input" type="password" placeholder="******* ">
-            <br>
-            <button class = "btn" id ="sendBtn"> Login </button>
+            <form action="/login" method = "POST"> 
+                <label class="form-label" for="Username"> UserName*</label>
+                <input class="form-input" type="text" placeholder="JohnCena" name="Username" id = "Username">
+                
+                <label class="form-label" for="Password"> Password (6 Characters at leats)*</label>
+                <input class="form-input" type="password" placeholder="*******" name="Password" id = "Password">
+                <br>
+                <button class = "btn" id ="sendBtn"> Login </button>
+            </form>
         </div>
     </section>

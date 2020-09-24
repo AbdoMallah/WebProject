@@ -1,31 +1,35 @@
 
 <section class = "bodySection">
     <div class = "posts">
-        <a href="post" class = "postLink">
+    {{#each data}}
+        <a href="post/id = {{Id}}" class = "postLink">
         <section class = "post"> 
             <img src="shoes.jpg" class= "img-responsive" alt = "Post Image"> </img>
             <div id = "postInfo">
-                <h3>Post Title</h3>
-                <p>Price: 800$</p>
-                <p id = "postParagraph">Test Lorum ipsum tetetetetetetetetetet</p>
+            
+                <h3>{{this.Title}}</h3>
+                <p>{{this.Price}}</p>
+                <p id = "postParagraph">{{this.Description}}</p>
             </div>
-            {{#if status}}
-                <button id = "editBtn"> Edit </button> <!-- If inlogged -->
-            {{/if}}
+                {{#if status}}
+                    <button id = "editBtn"> Edit </button> <!-- If inlogged -->
+                {{/if}}
         </section>
-        </a>   
+        </a> 
+    {{/each}}  
     </div>
     <div class = "LastestPosts">
         <h3>Lastest Posts</h3>
         <div class = "lastPost">
-            <a> 
+        {{#each data}}
+            <a href = "post/id= {{Id}} "> 
                 <div class="test">
-                    <h4>Post tilte </h4>
-                    <p> 2020-08-19   </p>
+                    <h4>{{this.Title}} </h4>
+                    <p> {{this.Date}}   </p>
                 </div>
-                <p> Price: 800$</p>
+                <p> {{this.Price}}</p>
             </a>
+        {{/each}}
         </div>  
-        
     </div>
 </section>
