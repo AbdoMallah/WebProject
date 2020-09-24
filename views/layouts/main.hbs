@@ -12,18 +12,21 @@
 <body>
     <header>
         <div class="topnav">
-            <a class="active" href="/">Home</a>
-            <a href="about">About</a> 
-            <a href="contact">Contact</a>
-        {{#if status}}
-            <a  id = "LoginBtn" href="login">Login</a>
-        {{else}}
-            <a  id = "UploadBtn" href="upload">Upload</a>
-        {{/if}}
+            <div class="Menu">
+                <a class="active" href="/">Home</a>
+                <a href="about">About</a> 
+                <a href="contact">Contact</a>
+            {{#if customer}}
+                <a  id = "LoginBtn" href="login">Login</a>
+            {{else}}
+                <a  id = "UploadBtn" href="upload">Upload</a>
+                <button class="btn" id="sendBtn">Logout</button>
+            {{/if}}
+            </div>
             <div class="search-container">
               <form action="/action_page.Nodejs">
                 <input type="text" placeholder="Search.." name="search">
-                <button type="submit"><i class="fa fa-search"></i></button>
+                <button id="searchBTN"type="submit"><i class="fa fa-search"></i></button>
               </form>
             </div>
         </div>

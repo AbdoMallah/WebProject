@@ -9,9 +9,9 @@ const port = 8080
 let db = new sqlite3.Database("database.db") 
 
 
-const USERNAME = "Admin";
+const ADMIN = "Admin";
 const PASSWORD = "20aDmIn20";
-var status = 1;
+var customer = true;
 /* === DataBase === */ 
 function createTable(){
     var postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL)";
@@ -66,31 +66,31 @@ app.use(express.static('views/images'))
 app.use(express.urlencoded({extended: false}))
 
 app.get('/', (req, res) => {
-    res.render('index.hbs', {status})
+    res.render('index.hbs', {customer})
 })
 app.get('/login', (req, res) => {
-    if(status == 0){
+    if(customer == false){
         req.redirect('/')
-    }
-    res.render('login.hbs')
+    }else{ res.render('login.hbs', {customer}) }
 })
 app.post('/login', (req, res) => {
-    if(req.body.Username == USERNAME && req.body.Password == PASSWORD){
-        status = 0;
+    if(req.body.Username == ADMIN && req.body.Password == PASSWORD){
+        customer = 0;
         res.redirect('/')
     }
 })
+
 app.get('/contact', (req, res) => {
-    res.render('contact.hbs', {status})
+    res.render('contact.hbs', {customer})
 })
 app.get('/upload', (req, res) => {
-    res.render('upload.hbs', {status})
+    res.render('upload.hbs', {customer})
 })
 app.get('/post', (req, res) => {
-    res.render('post.hbs', {status})
+    res.render('post.hbs', {customer})
 })
 app.get('/about', (req, res) => {
-    res.render('about.hbs', {status})
+    res.render('about.hbs', {customer})
 })
 
 app.listen(port);
