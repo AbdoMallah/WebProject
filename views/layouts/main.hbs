@@ -16,11 +16,14 @@
                 <a class="active" href="/">Home</a>
                 <a href="about">About</a> 
                 <a href="contact">Contact</a>
-            {{#if customer}}
+            {{#unless isLoggedIn}}
                 <a  id = "LoginBtn" href="login">Login</a>
-            {{else}}
+            {{/unless}}
+            {{#if isLoggedIn}}
                 <a  id = "UploadBtn" href="upload">Upload</a>
-                <button class="btn" id="sendBtn">Logout</button>
+                <form action="/logOut" method="POST">  
+                    <button class="btn" id="sendBtn">Logout</button>
+                </form>
             {{/if}}
             </div>
             <div class="search-container">
