@@ -2,7 +2,7 @@
 <section class = "bodySection">
     <div class = "posts">
     {{#each data}}
-        <a href="post/id = {{Id}}" class = "postLink">
+        <a href="post/id = {{this.Id}}" class = "postLink">
         <section class = "post"> 
             <img src="shoes.jpg" class= "img-responsive" alt = "Post Image"> </img>
             <div id = "postInfo">
@@ -11,7 +11,7 @@
                 <p>{{this.Price}}</p>
                 <p id = "postParagraph">{{this.Description}}</p>
             </div>
-                {{#if status}}
+                {{#if req.session.isLoggedIn}}
                     <button id = "editBtn"> Edit </button> <!-- If inlogged -->
                 {{/if}}
         </section>
