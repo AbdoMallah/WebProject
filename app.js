@@ -28,13 +28,6 @@ function insertPostInfo(Title, Description, Prise, Image){
         else{   console.log("Query Successfully exectued"); }
     })
 }
-function selectPosts(){
-    var selectQuery = "SELECT * FROM posts";
-    db.run(selectQuery, function(error,results){
-        if(error){  return console.error(error.message);    }
-        else{ console.log("Query Successfully executed") }
-    })
-}
 function selectPost(Id){
     var selectQuery = "SELECT * FROM posts WHERE Id ==" + Id;
     db.run(selectQuery, function(error,data){
@@ -49,11 +42,15 @@ function updatePost(Id, Title, Description, Prise, Image){
         else{   console.log("Query Successfully exectued"); }
     })
 }
+const selectPosts = "SELECT * FROM posts";
 createTable();
-insertPostInfo('Test2', 'hehek jieu e erea', '400', 'test1.jpg');
-var data = []
-data.push(selectPosts());
+insertPostInfo('Test2', 'hehek jieu e erea', '400', 'shoes.jpg');
 /* === Express-Handlebars === */ 
+Handlebars.registerHelper('limit', function (arr, limit) {
+    if (!Array.isArray(arr)) { return []; }
+    return arr.slice(0, limit);
+  });
+
 app.engine('hbs', expresshandlebars({
     defaultLayout: 'main.hbs',
     layoutsDir: __dirname + '/views/layouts/'
@@ -93,7 +90,12 @@ app.post('/logOut', (req, res) => {
 
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
-    res.render('index.hbs', {data})
+    db.all(selectPosts, [], async(error, data) => {
+        if(error){
+            throw error; 
+        }
+        res.render('index.hbs', {data})
+    })
 })
 app.get('/login', (req, res) => {
     if(req.session.isLoggedIn == true){
