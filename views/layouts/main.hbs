@@ -11,14 +11,11 @@
 </head>
 <body>
     <header>
-        <div class="topnav">
+        <div class="topnav" id="topNav">
             <div class="Menu">
                 <a class="active" href="/">Home</a>
                 <a href="about">About</a> 
                 <a href="contact">Contact</a>
-            {{#unless isLoggedIn}}
-                <a  id = "LoginBtn" href="login">Login</a>
-            {{/unless}}
             {{#if isLoggedIn}}
                 <a  id = "UploadBtn" href="upload">Upload</a>
                 <form action="/logOut" method="POST">  
@@ -53,8 +50,15 @@
                 <p id = "AboutSummary">In This Page, You can buy used stuff from Me in a very good condition</p>
             </a>
         </div>
+     
     </div>
-    <p id = "CopyR"> &copy;2020,maab19rl</p>
+    <div class="FootDiv"> 
+        {{#unless isLoggedIn}}
+            <a  id = "LoginBtn" href="login">Login</a>
+        {{/unless}}
+        <a href="#topNav"> Menu </a>
+        <p id = "CopyR"> &copy;2020,maab19rl</p>
+    </div>
     </footer>
 </body>
 </html>

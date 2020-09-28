@@ -4,7 +4,7 @@
     {{#each data}}
         <a href="post/id={{this.Id}}" class = "postLink">
         <section class = "post"> 
-            <img src="{{this.Image}}" class= "img-responsive" alt = "Post Image"> </img>
+            <img src="{{this.Image}}" class=    "img-responsive" id="postImage" alt="Post Image"> </img>
             <div id = "postInfo">
                 <h3>{{this.Title}}</h3>
                 <p>{{this.Prise}}</p>
@@ -22,7 +22,7 @@
     <div class = "LastestPosts">
         <h3>Lastest Posts</h3>
         <div class = "lastPost">
-        {{#each (limit data 2)}}
+        {{#each data}}
             <a href = "post/id= {{Id}} "> 
                 <div class="test">
                     <h4>{{this.Title}} </h4>

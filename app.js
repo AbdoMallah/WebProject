@@ -12,7 +12,7 @@ let db = new sqlite3.Database("database.db")
 
 /* === Admin === */
 const ADMIN = "Admin";
-const PASSWORD = "admin";
+const PASSWORD = "test123";
 /* === DataBase === */ 
 function createTable(){
     var postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL)";
@@ -45,11 +45,11 @@ function updatePost(Id, Title, Description, Prise, Image){
 const selectPosts = "SELECT * FROM posts";
 createTable();
 insertPostInfo('Test2', 'hehek jieu e erea', '400', 'shoes.jpg');
-/* === Express-Handlebars === */ 
-Handlebars.registerHelper('limit', function (arr, limit) {
-    if (!Array.isArray(arr)) { return []; }
-    return arr.slice(0, limit);
-  });
+// /* === Express-Handlebars === */ 
+// Handlebars.registerHelper('limit', function (arr, limit) {
+//     if (!Array.isArray(arr)) { return []; }
+//     return arr.slice(0, limit);
+//   });
 
 app.engine('hbs', expresshandlebars({
     defaultLayout: 'main.hbs',
