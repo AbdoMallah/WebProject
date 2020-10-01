@@ -12,6 +12,8 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    position: fixed;
+    width: 100%;
   }
   .Menu{
     display: flex; 
@@ -243,6 +245,7 @@ body {
   max-width: 500px;
   min-height: 100%;
   margin: auto;
+  margin-top:50px;
 }
 #sendBtn{
   width: 100%;
@@ -363,16 +366,19 @@ body {
     .topnav .search-container {
       float: none;
     }
-    .topnav a, .topnav input[type=text], .topnav .search-container button {
-      float: none;
-      display: block;
-      text-align: left;
-      width: 100%;
-      margin: 0;
-      padding: 14px;
+    .topnav{
+      position: static;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
-    .topnav input[type=text] {
-      border: 1px solid #ccc;  
+    .Menu, .search-container form{
+      display: flex;
+      flex-direction:  column;
+      justify-content: flex-start;
+    }
+    #searchBTN{
+      width:100%;
     }
     /* === Mobile Posts Section === */
     .posts{
@@ -403,6 +409,11 @@ body {
       display: none;
     }
 
+    #postImage{
+      max-height: 500px;
+      height: 100;
+      max-width: 350px;
+    }
     /* === Mobile Post Page === */
 
 

@@ -2,6 +2,8 @@ const express = require('express') //TO USE express frameWork
 const expresshandlebars = require('express-handlebars') //To Use to handlebars in express
 const session = require('express-session')
 const cookieParser  = require('cookie-parser')
+var Promise = require('bluebird');
+var bodyParser = require('body-parser');
 const app = express()
 const sqlite3 = require('sqlite3')
 const bcrypt = require('bcrypt') //uses to hash password, don't need it in is Projekt. 
@@ -43,6 +45,7 @@ function updatePost(Id, Title, Description, Prise, Image){
     })
 }
 const selectPosts = "SELECT * FROM posts";
+const selectLimitPosts = "SELECT * FROM posts ORDER BY Id LIMIT 2"
 createTable();
 insertPostInfo('Test2', 'hehek jieu e erea', '400', 'shoes.jpg');
 // /* === Express-Handlebars === */ 
@@ -90,7 +93,7 @@ app.post('/logOut', (req, res) => {
 
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
-    db.all(selectPosts, [], async(error, data) => {
+    db.all(selectLimitPosts, [], async(error, data) => {
         if(error){
             throw error; 
         }
