@@ -2,15 +2,17 @@
         <img src="shoes.jpg" alt="img" class = "img-responsive">
         <div id = "postDiv">
             <div class = "postInfo">
-                <h2 class = "postTitle"> Post title </h2>
-                <p> post Description Lorum hahh ashdkashjdkajh asdhakjsdha aksjdhasjkdha akjsdhajksdhkj akjshdkjahsd ahasd ahsdashduia adkhasuidhaiva auidhasudhai asduahsduiah adhasiudhaiuvasa na nasdas maaisdjoasda  asjdaiod iad idjaoidj  asdoiasdijas s</p>
+                {{#each data}}
+                <h2 class = "postTitle"> {{this.Title}} </h2>
+                <p> {{this.Description}}</p>
+                <h4>{{this.Prise}}</h4>
             </div>
             <div class="sellerSection"> 
                 <h3>Seller Contact Information</h3>
                 <div class= "sellerContact">
-                    <p>By: John Cena</p>
-                    <p>Email: John.Cena@gmail.com </p>
-                    <p>Phone Number: 07 0000 0000 </p>
+                    <p>By: Abdel Rahman Mallah  </p>
+                    <p>Email: abdowabdo1998@gmail.com </p>
+                    <p>Phone Number: 07 29757160     </p>
                 </div>
             </div>
         </div> 

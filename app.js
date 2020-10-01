@@ -10,11 +10,14 @@ const bcrypt = require('bcrypt') //uses to hash password, don't need it in is Pr
 var http = require('http')
 var fs = require('fs')
 const port = 8000
-let db = new sqlite3.Database("database.db")
-
+let db = new sqlite3.Database("my-database.db")
+const multer = require("multer");
+const { EDESTADDRREQ } = require('constants');
+var upload = multer({dest: 'views/uploads/'})
 /* === Admin === */
 const ADMIN = "Admin";
 const PASSWORD = "test123";
+
 /* === DataBase === */ 
 function createTable(){
     var postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL)";
@@ -23,36 +26,10 @@ function createTable(){
         else{   console.log("Query Successfully exectued"); }
     })
 }
-function insertPostInfo(Title, Description, Prise, Image){
-    var insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES ('" + Title + "', '" + Description + "','" + Prise + "','" + Image + "')";
-    db.run(insertQuery, function(error){
-        if(error){  return console.error(error.message);    }
-        else{   console.log("Query Successfully exectued"); }
-    })
-}
-function selectPost(Id){
-    var selectQuery = "SELECT * FROM posts WHERE Id ==" + Id;
-    db.run(selectQuery, function(error,data){
-        if(error){  return console.error(error.message);    }
-        else{   console.log("Query Successfully exectued"); }
-    })
-}
-function updatePost(Id, Title, Description, Prise, Image){
-    var selectQuery = "UPDATE posts SET Title = " ||Title|| ", Description = "|| Description ||", Prise = "|| Prise ||",Image = "||Image||"  WHERE Id ==" || Id;
-    db.run(selectQuery, function(error,data){
-        if(error){  return console.error(error.message);    }
-        else{   console.log("Query Successfully exectued"); }
-    })
-}
 const selectPosts = "SELECT * FROM posts";
 const selectLimitPosts = "SELECT * FROM posts ORDER BY Id LIMIT 2"
 createTable();
-insertPostInfo('Test2', 'hehek jieu e erea', '400', 'shoes.jpg');
-// /* === Express-Handlebars === */ 
-// Handlebars.registerHelper('limit', function (arr, limit) {
-//     if (!Array.isArray(arr)) { return []; }
-//     return arr.slice(0, limit);
-//   });
+/*******************************************************************/
 
 app.engine('hbs', expresshandlebars({
     defaultLayout: 'main.hbs',
@@ -62,8 +39,10 @@ app.engine('hbs', expresshandlebars({
     
 app.use(express.static('node_modules/spectre.css/dist'))
 app.use(express.static('CSS'))
-app.use(express.static('views/images')) 
+app.use(express.static('views/images'))
 app.use(express.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({extended: true}))
+
 app.use(session({
     saveUninitialized: false,
     resave: false,
@@ -91,9 +70,22 @@ app.post('/logOut', (req, res) => {
     res.redirect('/')
 })
 
+app.post('/post', upload.any(),(req, res) => {
+    const insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES (?,?,?,?)";
+    const values =  [req.body.title, req.body.description, req.body.prise,req.body.img]
+    db.run(insertQuery,values, function(error){
+        if(error){
+            console.log(error)
+
+        }
+        else{
+            res.redirect("/");
+        }
+    })
+})
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
-    db.all(selectLimitPosts, [], async(error, data) => {
+    db.all(selectPosts, [], async(error, data) => {
         if(error){
             throw error; 
         }
@@ -109,13 +101,21 @@ app.get('/contact', (req, res) => {
     res.render('contact.hbs')
 })
 app.get('/upload', (req, res) => {
-    if(req.session.isLoggedIn){
+    if(req.session.isLoggedIn ){
         res.render('upload.hbs')
-    }res.redirect('/')
+    }
+    else{
+        res.redirect('/')
+    }
 })
 /*Check the link later*/ 
 app.get('/post', (req, res) => {
-    res.render('post.hbs')
+    db.all(selectPost, [], async(error, data) => {
+        if(error){
+            throw error; 
+        }
+    res.render('post.hbs', {data})
+    })
 })
 app.get('/about', (req, res) => {
     res.render('about.hbs')

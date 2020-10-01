@@ -5,22 +5,22 @@
         </div>
         <div id = "UploadBody"> 
             <div class="form-group">
-                <form action="node.js/">
+                <form action="/post" method="POST">
                     <div class = "formSection">
                         <label class="form-label" for="img">Select image:</label>
-                        <input class="form-input" type="file" id="img" name="img" accept="image/*">
+                        <input class="form-input" type="file" id="img" name="img">
                     </div><br>
                     <div class = "formSection">
                         <label class="form-label" for="title">Title</label>
-                        <input class="form-input" type="text" placeholder="Ex: Computer">
+                        <input class="form-input" type="text" name="title" placeholder="Ex: Computer">
                     </div><br>
                     <div class = "formSection">
-                        <label class="form-label" for="desc">Description</label>
-                        <textarea class="form-input" type="text" placeholder="Ex: A very good Computer with intel i7 8700 processor and Nividia RTX 2070"></textarea>
+                        <label class="form-label" for="description">Description</label>
+                        <textarea class="form-input" type="text" name="description" placeholder="Ex: A very good Computer with intel i7 8700 processor and Nividia RTX 2070"></textarea>
                     </div><br>
                     <div class = "formSection">
-                         <label class="form-label" for="title">Price</label>
-                        <input class="form-input" type="text" placeholder="Ex: 800$">
+                         <label class="form-label" for="prise">Prise</label>
+                        <input class="form-input" type="text" name="prise" placeholder="Ex: 800$">
                     </div>
                     <br><hr>
                     <button class = "btn" id ="sendBtn"> Upload </button>
