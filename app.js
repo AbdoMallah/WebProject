@@ -2,18 +2,16 @@ const express = require('express') //TO USE express frameWork
 const expresshandlebars = require('express-handlebars') //To Use to handlebars in express
 const session = require('express-session')
 const cookieParser  = require('cookie-parser')
-var Promise = require('bluebird');
 var bodyParser = require('body-parser');
-const app = express()
 const sqlite3 = require('sqlite3')
 const bcrypt = require('bcrypt') //uses to hash password, don't need it in is Projekt. 
 var http = require('http')
 var fs = require('fs')
+const path = require('path')
+const multer = require("multer");
+const app = express()
 const port = 8000
 let db = new sqlite3.Database("my-database.db")
-const multer = require("multer");
-const { EDESTADDRREQ } = require('constants');
-var upload = multer({dest: 'views/uploads/'})
 /* === Admin === */
 const ADMIN = "Admin";
 const PASSWORD = "test123";
@@ -42,6 +40,7 @@ app.use(express.static('CSS'))
 app.use(express.static('views/images'))
 app.use(express.urlencoded({extended: false}))
 app.use(bodyParser.urlencoded({extended: true}))
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 app.use(session({
     saveUninitialized: false,
@@ -55,6 +54,22 @@ app.use(function(req,res,next){
     next()
   })
 
+
+/* ==== Upload Test Section ==== */
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/images');
+    },
+    filename: (req, file, cb) => {
+        console.log(file);
+        cb(null, file.originalname + '-' + Date.now() + 'jpg');
+    }
+});
+
+const upload = multer({ storage: storage});
+app.post('/uploads', upload.single('img'), (req, res) => {
+    console.log(req.file);
+});
 /* ===== POST ===== */
 app.post('/login', (req, res ) => {
     if(req.body.Username == ADMIN && req.body.Password == PASSWORD){
@@ -69,20 +84,19 @@ app.post('/logOut', (req, res) => {
     }
     res.redirect('/')
 })
+// app.post('/post', upload.any(),(req, res) => {
+//     const insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES (?,?,?,?)";
+//     const values =  [req.body.title, req.body.description, req.body.prise,req.body.img]
+//     db.run(insertQuery,values, function(error){
+//         if(error){
+//             console.log(error)
 
-app.post('/post', upload.any(),(req, res) => {
-    const insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES (?,?,?,?)";
-    const values =  [req.body.title, req.body.description, req.body.prise,req.body.img]
-    db.run(insertQuery,values, function(error){
-        if(error){
-            console.log(error)
-
-        }
-        else{
-            res.redirect("/");
-        }
-    })
-})
+//         }
+//         else{
+//             res.redirect("/");
+//         }
+//     })
+// })
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
     db.all(selectPosts, [], async(error, data) => {
