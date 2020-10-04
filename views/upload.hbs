@@ -1,18 +1,18 @@
-<div class = "SettingsManagment">
+<div class = "UploadPage">
         <div id="UploadHeader">
             <h3>Upload A New Post </h3>
             <p id="arrowDown"> &#10095 </p>
         </div>
         <div id = "UploadBody"> 
             <div class="form-group">
-                <form action="/uploads" method="POST">
+                <form action="/uploads" method="POST" enctype="multipart/form-data">
                     <div class = "formSection">
                         <label class="form-label" for="img">Select image:</label>
-                        <input class="form-input" type="file" id="img" name="img">
+                        <input class="form-input" type="file" id="img" name="img" required>
                     </div><br>
                     <div class = "formSection">
                         <label class="form-label" for="title">Title</label>
-                        <input class="form-input" type="text" name="title" placeholder="Ex: Computer">
+                        <input class="form-input" type="text" name="title" placeholder="Ex: Computer" required>
                     </div><br>
                     <div class = "formSection">
                         <label class="form-label" for="description">Description</label>
@@ -20,7 +20,7 @@
                     </div><br>
                     <div class = "formSection">
                          <label class="form-label" for="prise">Prise</label>
-                        <input class="form-input" type="text" name="prise" placeholder="Ex: 800$">
+                        <input class="form-input" type="text" name="prise" placeholder="Ex: 800$" required>
                     </div>
                     <br><hr>
                     <button class = "btn" id ="sendBtn"> Upload </button>

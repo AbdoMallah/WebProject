@@ -40,7 +40,7 @@ app.use(express.static('CSS'))
 app.use(express.static('views/images'))
 app.use(express.urlencoded({extended: false}))
 app.use(bodyParser.urlencoded({extended: true}))
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 app.use(session({
     saveUninitialized: false,
@@ -55,25 +55,22 @@ app.use(function(req,res,next){
   })
 
 
-/* ==== Upload Test Section ==== */
+// SET STORAGE ENGINE 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/images');
-    },
-    filename: (req, file, cb) => {
-        console.log(file);
-        cb(null, file.originalname + '-' + Date.now() + 'jpg');
+    destination: './uploads',
+    filename: function(req,file, cb){
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
-});
+})
+// INIT UPLOAD 
+const upload = multer({ storage: storage}).single('img');
 
-const upload = multer({ storage: storage});
-app.post('/uploads', upload.single('img'), (req, res) => {
-    console.log(req.file);
-});
 /* ===== POST ===== */
 app.post('/login', (req, res ) => {
     if(req.body.Username == ADMIN && req.body.Password == PASSWORD){
         req.session.isLoggedIn = true;
+        res.redirect('/')
+    }else{
         res.redirect('/')
     }
 })
@@ -81,29 +78,40 @@ app.post('/logOut', (req, res) => {
     if(req.session.isLoggedIn == true){
         req.session.isLoggedIn = false;
         res.redirect('/')
+    }else{
+        res.redirect('/')
     }
-    res.redirect('/')
 })
-// app.post('/post', upload.any(),(req, res) => {
-//     const insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES (?,?,?,?)";
-//     const values =  [req.body.title, req.body.description, req.body.prise,req.body.img]
-//     db.run(insertQuery,values, function(error){
-//         if(error){
-//             console.log(error)
-
-//         }
-//         else{
-//             res.redirect("/");
-//         }
-//     })
-// })
+app.post('/uploads',(req, res) => {
+    upload(req, res, (err) => {
+        if(err){
+            res.render('index', {err})
+        }else{
+            //console.log(req.file.filename);
+            const insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES (?,?,?,?)";
+            const values =  [req.body.title, req.body.description, req.body.prise,req.file.filename]
+            db.run(insertQuery,values, function(error){
+                if(error){
+                    console.log(error);
+                }
+                else{
+                    console.log("File Uploaded Successfully");
+                    res.redirect("/");
+                }
+            })
+        }
+    })
+})
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
+    var Inlogged = req.session.isLoggedIn;
+    console.log(Inlogged);
     db.all(selectPosts, [], async(error, data) => {
         if(error){
             throw error; 
         }
-        res.render('index.hbs', {data})
+        
+        res.render('index.hbs', {data, Inlogged})
     })
 })
 app.get('/login', (req, res) => {

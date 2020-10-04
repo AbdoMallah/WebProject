@@ -78,6 +78,7 @@ body {
 .bodySection{
   width: 100%;
   min-height: 65%;
+  margin-top: 30px;
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
@@ -87,7 +88,7 @@ body {
 .LastestPosts{
   width: 18%;
   max-width: 20%;
-  margin-top: 40px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -238,6 +239,11 @@ body {
   color: black;
   text-align: end;
 }
+#LogOutBtn{
+  margin-right: 5px;
+  border-style: none;
+  color: black;
+}
 
 /* === Contact Page === */
 
@@ -266,8 +272,11 @@ body {
 .AboutSection{
   max-width: 800px;
   width: 100%;
-  display: block;
+  display: flex;
+  flex-direction: column;
   margin:auto;
+  margin-top: 50px;
+
 }
 .AboutSection h2{
   background-color: #0B1457;
@@ -308,11 +317,12 @@ body {
 }
 
 /* === Settings Page === */
-.SettingsManagment{
+.UploadPage{
   width: 50%;
   margin: auto;
   text-align: center;
   align-items: center;
+  margin-top: 50px;
 } 
 
 #UploadHeader{

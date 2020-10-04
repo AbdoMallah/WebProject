@@ -4,15 +4,15 @@
     {{#each data}}
         <a href="post/id={{this.Id}}" class = "postLink">
         <section class = "post"> 
-            <img src="{{this.Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
+            <img src="./uploads/{{this.Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
             <div id = "postInfo">
                 <h3>{{this.Title}}</h3>
                 <p>{{this.Prise}}</p>
                 <p id = "postParagraph">{{this.Description}}</p>
             </div>
-                {{#if req.session.isLoggedIn}}
-                    <button id = "editBtn"> Edit </button> <!-- If inlogged -->
-                {{/if}}
+            {{#if Inlogged}}
+            <button id = "editBtn"> Edit </button> <!-- If inlogged -->
+            {{/if}}
         </section>
         </a> 
         {{else}}

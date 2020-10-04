@@ -18,9 +18,6 @@
                 <a href="contact">Contact</a>
             {{#if isLoggedIn}}
                 <a  id = "UploadBtn" href="upload">Upload</a>
-                <form action="/logOut" method="POST">  
-                    <button class="btn" id="UploadBtn">Logout</button>
-                </form>
             {{/if}}
             </div>
             <div class="search-container">
@@ -56,6 +53,11 @@
         {{#unless isLoggedIn}}
             <a  id = "LoginBtn" href="login">Login</a>
         {{/unless}}
+        {{#if isLoggedIn}}
+        <form action="/logOut" method="POST">  
+            <button id="LogOutBtn">Logout</button>
+        </form>
+        {{/if}}
         <p id = "CopyR"> &copy;2020,maab19rl</p>
     </div>
     </footer>
