@@ -24,10 +24,6 @@ function createTable(){
     })
 }
 const selectPosts = "SELECT * FROM posts";
-<<<<<<< Updated upstream
-=======
-const selectLimitPosts = "SELECT * FROM posts ORDER BY Id LIMIT 2"
->>>>>>> Stashed changes
 createTable();
 /*******************************************************************/
 
@@ -118,7 +114,6 @@ app.get('/', (req, res) => {
     // console.log(selectPosts);
     db.all(selectPosts, [], async(error, data) => {
         if(error){
-<<<<<<< Updated upstream
             console.log(error)
         }
         // let limitData = [];
@@ -132,11 +127,6 @@ app.get('/', (req, res) => {
         };
         let limitData = last(data,2);
         res.render('index.hbs', {data,Inlogged, limitData});      
-=======
-            throw error; 
-        } 
-        res.render('index.hbs', {data, Inlogged})
->>>>>>> Stashed changes
     })
 })
 app.get('/login', (req, res) => {
