@@ -25,7 +25,7 @@ function createTable(){
     })
 }
 const selectPosts = "SELECT * FROM posts";
-const selectLimitPosts = "SELECT * FROM posts ORDER BY Id LIMIT 2"
+const selectLimitPosts = "SELECT * FROM posts ORDER BY Id ASC LIMIT 2";
 createTable();
 /*******************************************************************/
 
@@ -57,9 +57,9 @@ app.use(function(req,res,next){
 
 // SET STORAGE ENGINE 
 const storage = multer.diskStorage({
-    destination: './uploads',
+    destination: '/images',
     filename: function(req,file, cb){
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+        cb(null, file.fieldname+'_'+ Date.now()+path.extname(file.originalname));
     }
 })
 // INIT UPLOAD 
@@ -92,7 +92,7 @@ app.post('/uploads',(req, res) => {
             const values =  [req.body.title, req.body.description, req.body.prise,req.file.filename]
             db.run(insertQuery,values, function(error){
                 if(error){
-                    console.log(error);
+                    //console.log(error);
                 }
                 else{
                     console.log("File Uploaded Successfully");
@@ -105,13 +105,18 @@ app.post('/uploads',(req, res) => {
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
     var Inlogged = req.session.isLoggedIn;
-    console.log(Inlogged);
-    db.all(selectPosts, [], async(error, data) => {
+    //console.log(Inlogged);
+    db.run(selectPosts, [], async(error, data) => {
         if(error){
             throw error; 
         }
-        
-        res.render('index.hbs', {data, Inlogged})
+        db.run(selectLimitPosts, [], async(error, values) => {
+            if(error){
+                throw error; 
+            }
+            
+            res.render('index.hbs', {data, values,Inlogged});
+        })
     })
 })
 app.get('/login', (req, res) => {
