@@ -2,7 +2,7 @@
 <section class = "bodySection">
     <div class = "posts">
     {{#each data}}
-        <a href="post/{{this.Id}}" class = "postLink">
+        <a href="posts/{{this.Id}}" class = "postLink">
         <section class = "post"> 
             <img src="{{this.Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
             <div id = "postInfo">
@@ -22,8 +22,8 @@
     <div class = "LastestPosts">
         <h3>Lastest Posts</h3>
         <div class = "lastPost">
-        {{#each values}}
-            <a href = "post/id= {{this.Id}} "> 
+        {{#each limitData}}
+            <a href = "posts/{{this.Id}}"> 
                 <div class="test">
                     <h4>{{this.Title}} </h4>
                     <p> 2020-09-29 </p> <!-- Not Working Yet--> 

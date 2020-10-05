@@ -228,6 +228,9 @@ body {
 .FootSec span{
   color: #ED1457;
 }
+.FootSec a{
+  text-decoration: none;
+}
 .FootSec a:hover{
   text-decoration: none;
 }
@@ -240,9 +243,14 @@ body {
   text-align: end;
 }
 #LogOutBtn{
-  margin-right: 5px;
-  border-style: none;
+  background-color: white;;
+  border: none;
   color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-right: 5px;
+  cursor: pointer;
 }
 
 /* === Contact Page === */
@@ -301,6 +309,7 @@ body {
   align-items: center;
   max-width: 1300px;
   width: 90%;
+  margin-top: 50px;
 }
 #postDiv{
   display: flex;

@@ -1,19 +1,20 @@
 <div class = "postSection">
-        <img src="shoes.jpg" alt="img" class = "img-responsive">
+        {{#if data}}
+        <img src={{Image}} alt="img" class = "img-responsive">
         <div id = "postDiv">
             <div class = "postInfo">
-                {{#each data}}
-                <h2 class = "postTitle"> {{this.Title}} </h2>
-                <p> {{this.Description}}</p>
-                <h4>{{this.Prise}}</h4>
-                {{/each}}
+                <h2><strong>Title: </strong> {{Title}} </h2>
+                <p><strong>Description: </strong> {{Description}}</p>
+                <h4><strong>Price: </strong>{{Prise}}</h4>
             </div>
+        {{/if}}
+
             <div class="sellerSection"> 
                 <h3>Seller Contact Information</h3>
                 <div class= "sellerContact">
                     <p>By: Abdel Rahman Mallah  </p>
                     <p>Email: abdowabdo1998@gmail.com </p>
-                    <p>Phone Number: 07 29757160     </p>
+                    <p>Phone Number: 07 29757160 </p>
                 </div>
             </div>
         </div> 

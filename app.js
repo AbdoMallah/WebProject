@@ -2,30 +2,28 @@ const express = require('express') //TO USE express frameWork
 const expresshandlebars = require('express-handlebars') //To Use to handlebars in express
 const session = require('express-session')
 const cookieParser  = require('cookie-parser')
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3')
 const bcrypt = require('bcrypt') //uses to hash password, don't need it in is Projekt. 
-var http = require('http')
-var fs = require('fs')
+const http = require('http')
+const fs = require('fs')
 const path = require('path')
 const multer = require("multer");
 const app = express()
 const port = 8000
-let db = new sqlite3.Database("my-database.db")
+let db = new sqlite3.Database("database.db")
 /* === Admin === */
 const ADMIN = "Admin";
 const PASSWORD = "test123";
-
 /* === DataBase === */ 
 function createTable(){
-    var postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL)";
+    const postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL)";
     db.run(postQuery, function(error){
         if(error){  return console.error(error.message);    }
         else{   console.log("Query Successfully exectued"); }
     })
 }
 const selectPosts = "SELECT * FROM posts";
-const selectLimitPosts = "SELECT * FROM posts ORDER BY Id ASC LIMIT 2";
 createTable();
 /*******************************************************************/
 
@@ -40,7 +38,6 @@ app.use(express.static('CSS'))
 app.use(express.static('views/images'))
 app.use(express.urlencoded({extended: false}))
 app.use(bodyParser.urlencoded({extended: true}))
-// app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 app.use(session({
     saveUninitialized: false,
@@ -57,9 +54,9 @@ app.use(function(req,res,next){
 
 // SET STORAGE ENGINE 
 const storage = multer.diskStorage({
-    destination: '/images',
+    destination: 'views/images',
     filename: function(req,file, cb){
-        cb(null, file.fieldname+'_'+ Date.now()+path.extname(file.originalname));
+        cb(null, file.fieldname + '_'+ Date.now()+path.extname(file.originalname));
     }
 })
 // INIT UPLOAD 
@@ -84,39 +81,52 @@ app.post('/logOut', (req, res) => {
 })
 app.post('/uploads',(req, res) => {
     upload(req, res, (err) => {
-        if(err){
-            res.render('index', {err})
+        const title = req.body.title;
+        const description = req.body.description;
+        const prise = req.body.prise
+        const filename = req.file.filename;
+        if(!title || !prise || !filename){
+            res.redirect("/upload")
+            /* Don't forget to fix the errors in the page*/ 
         }else{
-            //console.log(req.file.filename);
-            const insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES (?,?,?,?)";
-            const values =  [req.body.title, req.body.description, req.body.prise,req.file.filename]
-            db.run(insertQuery,values, function(error){
-                if(error){
-                    //console.log(error);
-                }
-                else{
-                    console.log("File Uploaded Successfully");
-                    res.redirect("/");
-                }
-            })
+            if(err){
+                console.log(err)
+                res.render('index', {err})
+            }else{         
+                const insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES (?,?,?,?)";
+                const values =  [title, description, prise,filename]
+                db.run(insertQuery,values, function(error){
+                    if(error){
+                        console.log(error);
+                    }
+                    else{
+                        console.log("File Uploaded Successfully");
+                        res.redirect("/");
+                    }
+                })
+            }
         }
     })
 })
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
-    var Inlogged = req.session.isLoggedIn;
-    //console.log(Inlogged);
-    db.run(selectPosts, [], async(error, data) => {
+    let Inlogged = req.session.isLoggedIn;
+    // console.log(selectPosts);
+    db.all(selectPosts, [], async(error, data) => {
         if(error){
-            throw error; 
+            console.log(error)
         }
-        db.run(selectLimitPosts, [], async(error, values) => {
-            if(error){
-                throw error; 
-            }
-            
-            res.render('index.hbs', {data, values,Inlogged});
-        })
+        // let limitData = [];
+        /* GEt last 2 elements from the database */
+        let last =  function(array, n) {
+            if (array == null) 
+              return void 0;
+            if (n == null) 
+               return array[array.length - 1];
+            return array.slice(Math.max(array.length - n, 0));  
+        };
+        let limitData = last(data,2);
+        res.render('index.hbs', {data,Inlogged, limitData});      
     })
 })
 app.get('/login', (req, res) => {
@@ -136,12 +146,18 @@ app.get('/upload', (req, res) => {
     }
 })
 /*Check the link later*/ 
-app.get('/post', (req, res) => {
-    db.all(selectPost, [], async(error, data) => {
+app.get('/posts/:Id', (req, res) => {
+    let selectPost ="SELECT * FROM posts WHERE Id = ?";
+    let postID = req.params.Id;
+    db.all(selectPost, postID, async(error, data) => {
         if(error){
             throw error; 
+            // return;
         }
-    res.render('post.hbs', {data})
+        else{
+            console.log(data);
+            res.render('post.hbs', {data})
+        }
     })
 })
 app.get('/about', (req, res) => {
