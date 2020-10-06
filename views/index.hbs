@@ -1,5 +1,6 @@
 
 <section class = "bodySection">
+    {{#if errMSG}} <p class="errMSG">{{errMSG}}</p>{{/if}}
     <div class = "posts">
     {{#each data}}
         <a href="posts/{{this.Id}}" class = "postLink">
@@ -7,7 +8,7 @@
             <img src="{{this.Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
             <div id = "postInfo">
                 <h3>{{this.Title}}</h3>
-                <p>{{this.Prise}}</p>
+                <p>{{this.Prise}} Kr</p>
                 <p id = "postParagraph">{{this.Description}}</p>
             </div>
             {{#if Inlogged}}
@@ -21,16 +22,16 @@
     </div>
     <div class = "LastestPosts">
         <h3>Lastest Posts</h3>
-        <div class = "lastPost">
         {{#each limitData}}
+        <div class = "lastPost">
             <a href = "posts/{{this.Id}}"> 
                 <div class="test">
                     <h4>{{this.Title}} </h4>
                     <p> 2020-09-29 </p> <!-- Not Working Yet--> 
                 </div>
-                <p> {{this.Prise}}</p>
+                <p> {{this.Prise}} Kr</p>
             </a>
+        </div> 
         {{/each}}
-        </div>  
     </div>
 </section>

@@ -15,11 +15,18 @@ let db = new sqlite3.Database("database.db")
 /* === Admin === */
 const ADMIN = "Admin";
 const PASSWORD = "test123";
+
+/* === ERROR === */
+let errMSG = '';
+const err = new Error(errMSG)
 /* === DataBase === */ 
 function createTable(){
     const postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL)";
-    db.run(postQuery, function(error){
-        if(error){  return console.error(error.message);    }
+    db.run(postQuery, function(err){
+        if(err){  
+            errMSG = 'Could Not Create The Table';
+            return console.error(err.message);    
+        }
         else{   console.log("Query Successfully exectued"); }
     })
 }
@@ -68,36 +75,38 @@ app.post('/login', (req, res ) => {
         req.session.isLoggedIn = true;
         res.redirect('/')
     }else{
-        res.redirect('/')
+        errMSG = 'Wrong Username Or Password '
+        res.render('login.hbs', {errMSG})
     }
 })
 app.post('/logOut', (req, res) => {
     if(req.session.isLoggedIn == true){
         req.session.isLoggedIn = false;
         res.redirect('/')
-    }else{
-        res.redirect('/')
     }
 })
-app.post('/uploads',(req, res) => {
+app.post('/upload',(req, res) => {
     upload(req, res, (err) => {
         const title = req.body.title;
         const description = req.body.description;
-        const prise = req.body.prise
+        const prise = parseInt(req.body.prise)
+        const checkNumberType = req.body.prise;
         const filename = req.file.filename;
-        if(!title || !prise || !filename){
-            res.redirect("/upload")
-            /* Don't forget to fix the errors in the page*/ 
+        errMSG = false;
+        if(!title || !prise || !filename || typeof prise !== "number" || typeof title !== "string"){
+            errMSG = "Fill the required field.";
+            res.render("upload.hbs", {errMSG})
         }else{
             if(err){
-                console.log(err)
-                res.render('index', {err})
+                errMSG = "The image hasn't been uploaded!"
+                res.render('index.hbs', {errMSG})
             }else{         
                 const insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES (?,?,?,?)";
                 const values =  [title, description, prise,filename]
                 db.run(insertQuery,values, function(error){
                     if(error){
-                        console.log(error);
+                        errMSG = "The post hasn't been inserted to the database"
+                        res.render('index.hbs', {errMSG})
                     }
                     else{
                         console.log("File Uploaded Successfully");
@@ -106,18 +115,18 @@ app.post('/uploads',(req, res) => {
                 })
             }
         }
+
     })
 })
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
     let Inlogged = req.session.isLoggedIn;
-    // console.log(selectPosts);
+    let IndexPage = true;
     db.all(selectPosts, [], async(error, data) => {
         if(error){
-            console.log(error)
+            errMSG = "ERROR 500, There's a server error, pleaze come back later"
+            res.send(errMSG)
         }
-        // let limitData = [];
-        /* GEt last 2 elements from the database */
         let last =  function(array, n) {
             if (array == null) 
               return void 0;
@@ -125,8 +134,8 @@ app.get('/', (req, res) => {
                return array[array.length - 1];
             return array.slice(Math.max(array.length - n, 0));  
         };
-        let limitData = last(data,2);
-        res.render('index.hbs', {data,Inlogged, limitData});      
+        let limitData = last(data,4);
+        res.render('index.hbs', {data,Inlogged, limitData, IndexPage});      
     })
 })
 app.get('/login', (req, res) => {
@@ -145,17 +154,16 @@ app.get('/upload', (req, res) => {
         res.redirect('/')
     }
 })
-/*Check the link later*/ 
 app.get('/posts/:Id', (req, res) => {
     let selectPost ="SELECT * FROM posts WHERE Id = ?";
     let postID = req.params.Id;
     db.all(selectPost, postID, async(error, data) => {
         if(error){
-            throw error; 
-            // return;
+            errMSG = "ERROR 500, There's a server error, pleaze come back later"
+            res.send(errMSG)
         }
         else{
-            console.log(data);
+            // console.log(data); don't forget to fix it 
             res.render('post.hbs', {data})
         }
     })
@@ -163,7 +171,6 @@ app.get('/posts/:Id', (req, res) => {
 app.get('/about', (req, res) => {
     res.render('about.hbs')
 })
-
 app.listen(port);
 
 

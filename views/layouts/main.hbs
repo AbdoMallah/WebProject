@@ -16,9 +16,8 @@
                 <a class="active" href="/">Home</a>
                 <a href="about">About</a> 
                 <a href="contact">Contact</a>
-            {{#if isLoggedIn}}
-                <a  id = "UploadBtn" href="upload">Upload</a>
-            {{/if}}
+{{#if IndexPage}}<a href="#footer" id="toFooter"> Footer </a>{{/if}}
+{{#if isLoggedIn}}<a  id = "UploadBtn" href="upload">Upload</a>{{/if}}
             </div>
             <div class="search-container">
               <form action="/action_page.Nodejs">
@@ -33,7 +32,7 @@
 {{{body}}}
 
 <footer> 
-    <div class ="footer">
+    <div class ="footer" id="footer">
         <div class = "FootSec"> 
             <h4>Contact <span> US </span></h4>
             <ul> 

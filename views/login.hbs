@@ -1,6 +1,9 @@
     <section id = "contactForm">
         <h2 id = "ContactTitle">Login</h2>
         <div class="form-group">
+            {{#if errMSG}}
+            <p class="errorMSG"> {{errMSG}} </p>
+            {{/if}}
             <form action="/login" method = "POST"> 
                 <label class="form-label" for="Username"> UserName*</label>
                 <input class="form-input" type="text" placeholder="JohnCena" name="Username" id = "Username" required="">
