@@ -3,11 +3,12 @@
     {{#if errMSG}} <p class="errMSG">{{errMSG}}</p>{{/if}}
     <div class = "posts">
     {{#each data}}
-        <a href="posts/{{this.Id}}" class = "postLink">
+        <a href="posts/{{this.Id}}" class="postLink">
         <section class = "post"> 
             <img src="{{this.Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
             <div id = "postInfo">
                 <h3>{{this.Title}}</h3>
+                
                 <p>{{this.Prise}} Kr</p>
                 <p id = "postParagraph">{{this.Description}}</p>
             </div>
