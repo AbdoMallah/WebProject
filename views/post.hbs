@@ -1,21 +1,25 @@
 <div class = "postSection">
-        {{#if data}}
-        <img src={{Image}} alt="img" class = "img-responsive">
+        {{#if content}}
+        <img src="{{this.Image}}" alt="img" class = "img-responsive">
         <div id = "postDiv">
             <div class = "postInfo">
-                <h2><strong>Title: </strong> {{Title}} </h2>
-                <p><strong>Description: </strong> {{Description}}</p>
-                <h4><strong>Price: </strong>{{Prise}} Kr</h4>
+                <h2><strong>Title: </strong> {{this.Title}} </h2>
+                <p><strong>Description: </strong> {{this.Description}}</p>
+                <p><strong>Price: </strong>{{this.Prise}} Kr</p>
             </div>
         {{/if}}
-
-            <div class="sellerSection"> 
-                <h3>Seller Contact Information</h3>
-                <div class= "sellerContact">
-                    <p>By: Abdel Rahman Mallah  </p>
-                    <p>Email: abdowabdo1998@gmail.com </p>
-                    <p>Phone Number: 07 29757160 </p>
-                </div>
+        {{#if isLoggedIn}}
+            <form action="/edit" method="POST">
+                <button id = "editBtn"> Edit </button>
+            </form>
+        {{/if}}
+        <div class="sellerSection"> 
+            <h3>Seller Contact Information</h3>
+            <div class= "sellerContact">
+                <p>By: Abdel Rahman Mallah  </p>
+                <p>Email: abdowabdo1998@gmail.com </p>
+                <p>Phone Number: 07 29757160 </p>
             </div>
-        </div> 
-    </div>
+        </div>
+    </div> 
+</div>

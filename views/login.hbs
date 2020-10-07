@@ -1,15 +1,19 @@
     <section id = "contactForm">
         <h2 id = "ContactTitle">Login</h2>
         <div class="form-group">
-            {{#if errMSG}}
-            <p class="errorMSG"> {{errMSG}} </p>
+            {{#if validationErr.length }}
+            <ul>
+                {{#each validationErr}}
+                <p class="errorMSG"> {{this}} </p>
+                {{/each}}
+            </ul>            
             {{/if}}
             <form action="/login" method = "POST"> 
                 <label class="form-label" for="Username"> UserName*</label>
-                <input class="form-input" type="text" placeholder="JohnCena" name="Username" id = "Username" required="">
+                <input class="form-input" type="text" placeholder="JohnCena" name="username" id = "Username" required>
                 
                 <label class="form-label" for="Password"> Password (6 Characters at leats)*</label>
-                <input class="form-input" type="password" placeholder="*******" name="Password" id = "Password" required="">
+                <input class="form-input" type="password" placeholder="*******" name="password" id = "Password" required>
                 <br>
                 <button class = "btn" id ="sendBtn"> Login </button>
             </form>

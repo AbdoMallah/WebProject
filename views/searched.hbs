@@ -1,8 +1,7 @@
-
 <section class = "bodySection">
-     {{#if errMSG}}
+     {{#if SearchError}}
     <ul>
-        {{#each errMSG}}
+        {{#each SearchError}}
         <p class="errorMSG"> {{this}} </p>
         {{/each}}
     </ul>
@@ -20,22 +19,6 @@
             </div>
         </section>
         </a> 
-        {{else}}
-        <p class="btn btn-error">No Content Yet </p>
     {{/each}}  
-    </div>
-    <div class = "LastestPosts">
-        <h3>Lastest Posts</h3>
-        {{#each limitData}}
-        <div class = "lastPost">
-            <a href = "post/{{this.Id}}"> 
-                <div class="test">
-                    <h4>{{this.Title}} </h4>
-                    <p> 2020-09-29 </p> <!-- Not Working Yet--> 
-                </div>
-                <p> {{this.Prise}} Kr</p>
-            </a>
-        </div> 
-        {{/each}}
     </div>
 </section>

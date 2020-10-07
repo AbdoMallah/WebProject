@@ -4,7 +4,13 @@
             <p id="arrowDown"> &#10095 </p>
         </div>
         <div id = "UploadBody"> 
-        {{#if errMSG}} <p class="errorMSG"> {{errMSG}} </p>{{/if}}
+            {{#if errMSG}}
+            <ul> 
+                {{#each errMSG}}
+                <p class="errorMSG"> {{this}} </p>
+                {{/each}}
+            </ul>            
+            {{/if}}
             <div class="form-group">
                 <form action="/upload" method="POST" enctype="multipart/form-data">
                     <div class = "formSection">

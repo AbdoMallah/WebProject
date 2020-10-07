@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="spectre.css">
     <link rel="stylesheet" href="/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    
     <title>Welcome</title>
 </head>
 <body>
@@ -14,14 +14,23 @@
         <div class="topnav" id="topNav">
             <div class="Menu">
                 <a class="active" href="/">Home</a>
-                <a href="about">About</a> 
-                <a href="contact">Contact</a>
-{{#if IndexPage}}<a href="#footer" id="toFooter"> Footer </a>{{/if}}
-{{#if isLoggedIn}}<a  id = "UploadBtn" href="upload">Upload</a>{{/if}}
+                <a href="../about">About</a> 
+                <a href="../contact">Contact</a>
+                {{#if IndexPage}}
+                <a href="#footer" id="toFooter"> Footer </a>{{/if}}
+                {{#if isLoggedIn}}
+                <a  id = "UploadBtn" href="../upload">Upload</a>{{/if}}
             </div>
+            {{#if SearchError}}
+            <ul>
+                {{#each errorMSG}}
+                <p class="errorMSG"> {{this}} </p>
+                {{/each}}
+            </ul>
+            {{/if}}
             <div class="search-container">
-              <form action="/action_page.Nodejs">
-                <input type="text" placeholder="Search.." name="search">
+              <form action="/searching:?" method="POST">
+                <input type="text" placeholder="Search.." name="search" required>
                 <button id="searchBTN"type="submit"><i class="fa fa-search"></i></button>
               </form>
             </div>
@@ -50,7 +59,7 @@
     </div>
     <div class="FootDiv"> 
         {{#unless isLoggedIn}}
-            <a  id = "LoginBtn" href="login">Login</a>
+            <a  id = "LoginBtn" href="../login">Login</a>
         {{/unless}}
         {{#if isLoggedIn}}
         <form action="/logOut" method="POST">  

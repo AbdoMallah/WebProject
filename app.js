@@ -8,57 +8,51 @@ const bcrypt = require('bcrypt') //uses to hash password, don't need it in is Pr
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
-const multer = require("multer");
+const multer = require('multer');
 const app = express()
 const port = 8000
-let db = new sqlite3.Database("database.db")
+let db = new sqlite3.Database('database.db');
 /* === Admin === */
-const ADMIN = "Admin";
-const PASSWORD = "test123";
+const ADMIN_USERNAME = 'Admin';
+const ADMIN_PASSWORD = 'test123';
 
-/* === ERROR === */
-let errMSG = '';
-const err = new Error(errMSG)
 /* === DataBase === */ 
 function createTable(){
-    const postQuery = "CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL)";
+    const postQuery = 'CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Prise NUMBER NOT NULL, Image TEXT NOT NULL)';
     db.run(postQuery, function(err){
         if(err){  
-            errMSG = 'Could Not Create The Table';
-            return console.error(err.message);    
+            errMSG.push= 'Could Not Create The Table';
+            return console.error(errMSG);   
         }
-        else{   console.log("Query Successfully exectued"); }
+        else{   console.log('Query Successfully exectued'); }
     })
 }
-const selectPosts = "SELECT * FROM posts";
+const selectPosts = 'SELECT * FROM posts';
 createTable();
 /*******************************************************************/
 
 app.engine('hbs', expresshandlebars({
     defaultLayout: 'main.hbs',
     layoutsDir: __dirname + '/views/layouts/'
-}))
-
-    
+})) 
 app.use(express.static('node_modules/spectre.css/dist'))
 app.use(express.static('CSS'))
 app.use(express.static('views/images'))
+app.use(express.static('views'))
 app.use(express.urlencoded({extended: false}))
 app.use(bodyParser.urlencoded({extended: true}))
 
+/* === SESSION === */
 app.use(session({
     saveUninitialized: false,
     resave: false,
-    secret: 'hehahrhahe'
+    secret: 'ujniasujnias'
 }))
-
 app.use(function(req,res,next){
     const isLoggedIn = req.session.isLoggedIn
     res.locals.isLoggedIn = isLoggedIn
     next()
-  })
-
-
+})
 // SET STORAGE ENGINE 
 const storage = multer.diskStorage({
     destination: 'views/images',
@@ -70,63 +64,93 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage}).single('img');
 
 /* ===== POST ===== */
-app.post('/login', (req, res ) => {
-    if(req.body.Username == ADMIN && req.body.Password == PASSWORD){
+app.post('/login', async(req, res ) => {
+    const validationErr = [];
+    const enteredUsername = req.body.username 
+    const enteredPassword = req.body.password  
+   
+    if(req.body.username != ADMIN_USERNAME){
+        validationErr.push('Wrong Username');
+    }
+    if(req.body.password != ADMIN_PASSWORD){
+        validationErr.push('Wrong Password');   
+    }
+    if(validationErr.length == 0){
         req.session.isLoggedIn = true;
         res.redirect('/')
     }else{
-        errMSG = 'Wrong Username Or Password '
-        res.render('login.hbs', {errMSG})
+        const model = {validationErr}
+        res.render('login.hbs', model)
     }
 })
 app.post('/logOut', (req, res) => {
-    if(req.session.isLoggedIn == true){
-        req.session.isLoggedIn = false;
-        res.redirect('/')
-    }
+    req.session.isLoggedIn = false;
+    res.redirect('/')
 })
 app.post('/upload',(req, res) => {
+    const errMSG = [];
     upload(req, res, (err) => {
         const title = req.body.title;
         const description = req.body.description;
         const prise = parseInt(req.body.prise)
-        const checkNumberType = req.body.prise;
         const filename = req.file.filename;
-        errMSG = false;
-        if(!title || !prise || !filename || typeof prise !== "number" || typeof title !== "string"){
-            errMSG = "Fill the required field.";
-            res.render("upload.hbs", {errMSG})
-        }else{
-            if(err){
-                errMSG = "The image hasn't been uploaded!"
-                res.render('index.hbs', {errMSG})
-            }else{         
-                const insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES (?,?,?,?)";
-                const values =  [title, description, prise,filename]
-                db.run(insertQuery,values, function(error){
-                    if(error){
-                        errMSG = "The post hasn't been inserted to the database"
-                        res.render('index.hbs', {errMSG})
-                    }
-                    else{
-                        console.log("File Uploaded Successfully");
-                        res.redirect("/");
-                    }
-                })
-            }
+
+        if(!title || !prise || !filename){errMSG.push('Fill the required field.')}
+        if(typeof prise !== 'number' || prise < 0){ errMSG.push('Prise Should Content A  Positiv Number')}
+        if(typeof title !== 'string'){errMSG.push('Title Should Content text, Numbers Only')}
+        if(err){errMSG.push('The image has not been uploaded!');}
+        if(errMSG.length == 0){         
+            const insertQuery = "INSERT INTO posts('Title', 'Description', 'Prise', 'Image') VALUES (?,?,?,?)";
+            const values =  [title, description, prise,filename]
+            db.run(insertQuery,values, function(error){
+                if(error){
+                    console.log('The post has not been inserted to the database')
+                }
+                else{
+                    console.log('File Uploaded Successfully');
+                    res.redirect('/');
+                }
+            })
+        }
+        else{
+            const model = {errMSG}
+            res.render('upload.hbs', model)
         }
 
     })
 })
+app.post('/searching?:search', (req, res) => {
+    const Query = 'SELECT * FROM posts WHERE Title LIKE ?'
+    const searchingFor = '%'+req.body.search+'%'
+    const SearchError = [];
+    const errMSG = [];
+    // console.log(searchingFor);
+    if(searchingFor !== ''){
+        db.all(Query, searchingFor, (error, data)=> {
+            if(error){
+                res.send('Server error, could not select data from the database')
+            }
+            if(data.length === 0){
+                SearchError.push('There is no content with this Title:'+searchingFor.slice('1','-1'))
+                const model = {SearchError}
+                res.render('searched.hbs', model)
+            }else{
+                const model = {data}
+                res.render('searched.hbs', model)
+            }
+            
+        })
+    }else{
+        errMSG.push('You can not search with empty field');
+        const model = {errMSG}
+        res.render('/index.hbs', model)
+    }
+})
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
-    let Inlogged = req.session.isLoggedIn;
     let IndexPage = true;
     db.all(selectPosts, [], async(error, data) => {
-        if(error){
-            errMSG = "ERROR 500, There's a server error, pleaze come back later"
-            res.send(errMSG)
-        }
+        if(error){ res.send(error) }
         let last =  function(array, n) {
             if (array == null) 
               return void 0;
@@ -135,7 +159,10 @@ app.get('/', (req, res) => {
             return array.slice(Math.max(array.length - n, 0));  
         };
         let limitData = last(data,4);
-        res.render('index.hbs', {data,Inlogged, limitData, IndexPage});      
+        const model = {
+            data, limitData, IndexPage
+        }
+        res.render('index.hbs', model);      
     })
 })
 app.get('/login', (req, res) => {
@@ -154,20 +181,22 @@ app.get('/upload', (req, res) => {
         res.redirect('/')
     }
 })
-app.get('/posts/:Id', (req, res) => {
-    let selectPost ="SELECT * FROM posts WHERE Id = ?";
-    let postID = req.params.Id;
-    db.all(selectPost, postID, async(error, data) => {
-        if(error){
-            errMSG = "ERROR 500, There's a server error, pleaze come back later"
-            res.send(errMSG)
-        }
+
+app.get('/post/:Id', (req, res) => {
+    const id = req.params.Id;
+    const Query ="SELECT * FROM posts WHERE Id = ?";
+    const postID = [id]
+    db.get(Query, postID, (error, content) => {
+        if(!error){ 
+            const model = {content}
+            console.log(content)
+            res.render('post.hbs', model)}
         else{
-            // console.log(data); don't forget to fix it 
-            res.render('post.hbs', {data})
+            res.send(error)
         }
     })
 })
+
 app.get('/about', (req, res) => {
     res.render('about.hbs')
 })
