@@ -119,7 +119,7 @@ app.post('/upload',(req, res) => {
 
     })
 })
-app.post('/searching?:search', (req, res) => {
+app.post('/searching:search', (req, res) => {
     const Query = 'SELECT * FROM posts WHERE Title LIKE ?'
     const searchingFor = '%'+req.body.search+'%'
     const SearchError = [];

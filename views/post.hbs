@@ -1,11 +1,11 @@
 <div class = "postSection">
         {{#if content}}
-        <img src="{{this.Image}}" alt="img" class = "img-responsive">
+        <img src="../{{content.Image}}" alt="img" class = "img-responsive">
         <div id = "postDiv">
             <div class = "postInfo">
-                <h2><strong>Title: </strong> {{this.Title}} </h2>
-                <p><strong>Description: </strong> {{this.Description}}</p>
-                <p><strong>Price: </strong>{{this.Prise}} Kr</p>
+                <h2><strong>Title: </strong> {{content.Title}} </h2>
+                <p><strong>Description: </strong> {{content.Description}}</p>
+                <p><strong>Price: </strong>{{content.Prise}} Kr</p>
             </div>
         {{/if}}
         {{#if isLoggedIn}}
