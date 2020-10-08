@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="spectre.css">
+    <link rel="stylesheet" href="/spectre.css">
     <link rel="stylesheet" href="/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
@@ -14,13 +14,13 @@
         <div class="topnav" id="topNav">
             <div class="Menu">
                 <a class="active" href="/">Home</a>
-                <a href="../about">About</a> 
-                <a href="../contact">Contact</a>
+                <a href="/about">About</a> 
+                <a href="/contact">Contact</a>
                 {{#if IndexPage}}
                 <a href="#footer" id="toFooter"> Footer </a>{{/if}}
                 {{#if isLoggedIn}}
-                <a  class = "AdminBtn" href="../upload">Upload</a>
-                <a  class = "AdminBtn" href="../categories">Categories</a>
+                <a  class = "AdminBtn" href="/upload">Upload</a>
+                <a  class = "AdminBtn" href="/categories">Categories</a>
                 <form action="/logOut" method="POST">  
                     <button class="AdminBtn LogOutBtn">Logout</button>
                 </form> 
@@ -33,12 +33,14 @@
                 {{/each}}
             </ul>
             {{/if}}
+            {{#if IndexPage}}
             <div class="search-container">
               <form action="/searching?" method="GET">
                 <input type="text" placeholder="Search.." name="search" required>
                 <button id="searchBTN"type="submit"><i class="fa fa-search"></i></button>
               </form>
             </div>
+            {{/if}}
         </div>
     </header>
     <br>
@@ -47,11 +49,11 @@
 
     <footer> 
         <div class ="footer" id="footer">
-            <div class = "FootSec" id="toTopDiv"><a href="#topNav" id="toTop"><h3> Top &#8593</h3></a></div>
+            <div class = "FootSec" id="toTopDiv"><a href="#topNav" id="toTop"><h3> Top &#8593; </h3></a></div>
             <div class = "FootSec"> 
                 <h4>Contact <span> US </span></h4>
                 <ul> 
-                    <a href = "../contact.hbs"><li>Email: service@pickngo.com</li></a>
+                    <li><a href = "../contact.hbs"></a>Email: service@pickngo.com</a></li>
                     <li>Phone Number: 07 xxxxxxxxx </li>
                 </ul>
             </div>
@@ -64,7 +66,7 @@
         </div>
         <div class="FootDiv"> 
             {{#unless isLoggedIn}}
-                <a  id = "LoginBtn" href="../login">Login</a>
+            <a  id = "LoginBtn" href="../login">Login</a>
             {{/unless}}
             
             <p id = "CopyR"> &copy;2020,maab19rl</p>

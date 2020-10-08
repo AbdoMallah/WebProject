@@ -1,30 +1,28 @@
-<div class="form-group">
-                <form action="/upload" method="POST" enctype="multipart/form-data">
-                    <div class = "formSection">
-                        <label class="form-label" for="img">Select image:</label>
-                        <input class="form-input" type="file" id="img" name="img" required>
-                    </div><br>
-                    <div class = "formSection">
-                        <label class="form-label" for="title">Title</label>
-                        <input class="form-input" type="text" name="title" placeholder="Ex: Bmw " required>
-                    </div><br>
-                    <div class = "formSection">
-                        <label class="form-label" for="description">Description</label>
-                        <textarea class="form-input" type="text" name="description" placeholder="Ex: A very good Computer with intel i7 8700 processor and Nividia RTX 2070"></textarea>
-                    </div><br>
-                    <div class = "formSection">
-                         <label class="form-label" for="price">Price</label>
-                        <input class="form-input" type="number" name="price" placeholder="Ex: 800$" required>
-                    </div><br>
-                    <div class="formSection">
-                        <label class="form-label" for=""> Category</label>
-                        <select class="form-select" name="category">
-                            {{#each Category}}
-                            <option value="{{this.Name}}">{{this.Name}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <br><hr>
-                    <button class = "btn" id ="sendBtn"> Upload </button>
-                </form>                
-            </div>
+<div class="form-group" id="edit-form-group">
+    {{#if selectedPost}}
+    <form action="/editing?" method="GET">
+        <div class = "formSection">
+            <label class="form-label" for="title">Title</label>
+            <input class="form-input" type="text" name="title" placeholder="Ex: Bmw " value="{{selectedPost.Title}}" required>
+        </div><br>
+        <div class = "formSection">
+            <label class="form-label" for="description">Description</label>
+            <textarea class="form-input" type="text" name="description">{{selectedPost.Description}}</textarea>
+        </div><br>
+        <div class = "formSection">
+                <label class="form-label" for="price">Price</label>
+            <input class="form-input" type="number" name="price" placeholder="Ex: 800$" value="{{selectedPost.Price}}" required>
+        </div><br>
+        <div class="formSection">
+            <label class="form-label" for=""> Category</label>
+            <select class="form-select" name="category">
+                {{#each selectedCategories}}
+                <option value="{{Name}}">{{Name}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <br><hr>
+        <button class = "btn" id ="sendBtn"> Edit </button>
+    </form> 
+    {{/if}}         
+</div>

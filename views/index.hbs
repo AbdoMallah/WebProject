@@ -8,14 +8,14 @@
     </ul>
     {{/if}}
     <div class = "posts">
-    {{#each data}}
+    {{#each selectedPosts}}
         <a href="/post/{{this.Id}}" class="postLink">
         <section class = "post"> 
             <img src="{{this.Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
             <div id = "postInfo">
                 <h3>{{this.Title}}</h3>
                 
-                <p>{{this.Price}} $</p>
+                <p>Price:{{this.Price}} $</p>
                 <p class="postParagraph">{{this.Description}}</p>
             </div>
         </section>
@@ -28,12 +28,17 @@
         <h3>Lastest Posts</h3>
         {{#each limitData}}
         <div class = "lastPost">
-            <a href = "post/{{this.Id}}"> 
-                <div class="test">
-                    <h4>{{this.Title}} </h4>
-                    <p> 2020-09-29 </p> <!-- Not Working Yet--> 
+            <a class="lastPostLink" href = "post/{{this.Id}}"> 
+                <div class="postContent">
+                    <div class="infoDiv">
+                        <h4>{{this.Title}} </h4>
+                        <h5> {{this.Price}} $</h5>
+                    </div>
+                    <div class="dateDiv">
+                        <h6>Uploaded At:</h6>
+                        <p>{{this.Date}} </p>
+                    </div>
                 </div>
-                <p> {{this.Price}} Kr</p>
             </a>
         </div> 
         {{/each}}

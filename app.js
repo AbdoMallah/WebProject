@@ -9,23 +9,28 @@ const http = require('http')
 const fs = require('fs')
 const path = require('path')
 const multer = require('multer');
+const moment = require('moment');
 const app = express()
 const port = 8000
-let db = new sqlite3.Database('database3.db');
+let db = new sqlite3.Database('database.db');
 /* === Admin === */
 const ADMIN_USERNAME = 'Admin';
 const ADMIN_PASSWORD = 'test123';
 
-/* === Limit Function === */
+/* === Functions === */
 let last =  function(array, n) {
     if (array == null) {return void 0;}
     if (n == null){return array[array.length - 1];}
     return array.slice(Math.max(array.length - n, 0));  
 }
+function changeDateFormat(dateInMilliSeconds){
+    return moment(dateInMilliSeconds).format('MMMM MM YYYY h:mm:ss');
+}
+
 
 /* === DataBase === */ 
 function createPostsTable(){
-    const Query = 'CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Price NUMBER NOT NULL, Category TEXT NOT NULL,Image TEXT NOT NULL)';
+    const Query = 'CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Price NUMBER NOT NULL, CategoryID INTEGER NOT NULL,Image TEXT NOT NULL, Date TEXT NOT NULL, FOREIGN KEY (CategoryID) REFERENCES categories(Id))';
     db.run(Query, function(err){
         if(err){  
             const errMSG = 'Could Not Create The Table';
@@ -52,6 +57,8 @@ function selectQuery(table, id=false){
 
 createPostsTable();
 createCategoriesTable();
+
+
 /*******************************************************************/
 
 app.engine('hbs', expresshandlebars({
@@ -62,6 +69,8 @@ app.use(express.static('node_modules/spectre.css/dist'))
 app.use(express.static('CSS'))
 app.use(express.static('views/images'))
 app.use(express.static('views'))
+app.use(express.static('views/post'))
+
 app.use(express.urlencoded({extended: false}))
 app.use(bodyParser.urlencoded({extended: true}))
 
@@ -124,8 +133,8 @@ app.post('/upload',(req, res) => {
             if(typeof Price !== 'number' || Price < 0){ errMSG.push('Price Should Content A  Positiv Number')}
             if(typeof Title !== 'string'){errMSG.push('Title Should Content text, Numbers Only')}
             if(err){errMSG.push('The image has not been uploaded!');}       
-            const insertQuery = "INSERT INTO posts('Title', 'Description', 'Price', 'Category','Image') VALUES (?,?,?,?,?)";
-            const values =  [Title, Description, Price, Category, Filename]
+            const insertQuery = "INSERT INTO posts('Title', 'Description', 'Price', 'CategoryId','Image', 'Date') VALUES (?,?,?,?,?,?)";
+            const values =  [Title, Description, Price, Category, Filename, Date.now()]
             db.run(insertQuery,values, function(error){
                 if(error){
                     res.send('The post has not been inserted to the database')
@@ -203,17 +212,19 @@ app.post('/delete-category', (req, res) => {
 app.get('/', (req, res) => {
     let IndexPage = true;
     const Query = selectQuery('posts');
-    db.all(Query, [], async(error, data) => {
+    db.all(Query, [], async(error, selectedPosts) => {
         if(error){ res.send(error) }
         else{
-            let limitData = last(data,4);
+            let limitData = last(selectedPosts,4);
+            for(const post of selectedPosts ){
+                post.Date = changeDateFormat(parseInt(post.Date))
+            }
             const model = {
-                data, limitData, IndexPage
+                selectedPosts, limitData, IndexPage
             }
             res.render('index.hbs', model); 
         }
     })
-  
 })
 app.get('/login', (req, res) => {
     if(req.session.isLoggedIn == true){
@@ -226,12 +237,10 @@ app.get('/contact', (req, res) => {
 app.get('/upload', (req, res) => {
     if(req.session.isLoggedIn ){
         const Query = selectQuery('categories')
-        // console.log(Query);
         db.all(Query, [], async(error, Category) => {
             if(error){res.send(error)}
             else{
                 const model= {Category}
-                // res.send(Category)
                 res.render('upload.hbs', model) 
             }
         })             
@@ -253,23 +262,26 @@ app.get('/post/:Id', (req, res) => {
     })
 })
 app.get('/searching?:search', (req, res) => {
-    const Query = 'SELECT * FROM posts WHERE ( Category LIKE ? OR Title LIKE ?) ORDER BY Id'
-    const searchingFor = '%'+req.query.search+'%'
-    // console.log('Search = '+req.query.search)
-    const SearchError = []
+    const selectQuery = 'SELECT P.*, C.* FROM posts AS P JOIN categories AS C ON P.CategoryId = C.Id WHERE P.Title LIKE ? OR C.Name LIKE ?'
+    const searchTerm = '%'+req.query.search+'%'
+    const placeHolderValues = [
+        searchTerm, searchTerm
+    ]
+    // res.send(selectQuery)
+    const SearchError = []  
     const errMSG = []
-    // console.log(searchingFor);
-    if(searchingFor !== ''){
-        db.all(Query, searchingFor, (error, data)=> {
+    if(searchTerm !== ''){
+        db.all(selectQuery, placeHolderValues, (error, searchedPost)=> {
             if(error){
-                res.send('Server error, could not select data from the database')
+                res.send(error + ' Server error, could not select data from the database')
             }
-            if(data.length === 0){
-                SearchError.push('There are no content with this Title: '+searchingFor.slice('1','-1')+' OR Category: '+searchingFor.slice('1','-1'))
+            // res.send(searchedPost)
+            if(!searchedPost){
+                SearchError.push('There are no content with this Title: '+searchTerm.slice('1','-1')+' OR Category: '+searchTerm.slice('1','-1'))
                 const model = {SearchError}
                 res.render('searched.hbs', model)
             }else{
-                const model = {data}
+                const model = {searchedPost}
                 res.render('searched.hbs', model)
             }
             
@@ -296,21 +308,31 @@ app.get('/categories', (req, res) => {
     }
     else{   res.redirect('/login')}
 })
-app.get('/edit/:Id', (req, res) => {
-    const id = req.params.Id
-    const Query = "SELECT * FROM posts WHERE Id = ?;SELECT * FROM categories"
-    const value = [id]
-    db.all(Query, value, async(error, data) => {
-        if(!error){
-            const model = {data}
-            res.render('/edit.hbs', model)
-        }
-        else{
-            res.send(error);
-        }
-    })
+app.get('/post/edit/:Id', (req, res) => {
+    if(req.session.isLoggedIn){
+        const id = req.params.Id
+        const selectPostQuery = "SELECT * FROM posts WHERE Id = ?"
+        const selectCategoriesQuery = "SELECT * FROM categories"
+        const value = [id]
+        db.get(selectPostQuery, value, async(error, selectedPost) => {
+            if(!error){
+                db.all(selectCategoriesQuery,[], async(error, selectedCategories) => {
+                    if(!error){
+                    const model = {selectedPost, selectedCategories}
+                    res.render('edit.hbs', model)
+                }
+                else{
+                    res.send('Second Query: '+error)
+                }
+                })
+            }
+            else{
+                res.send('First Query: '+error)
+            }
+        })
+    }else{res.redirect('/login')}
 })
-app.listen(port);
+app.listen(port)
 
 
 

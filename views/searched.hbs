@@ -7,14 +7,14 @@
     </ul>
     {{/if}}
     <div class = "posts">
-    {{#each data}}
-        <a href="/post/{{this.Id}}" class="postLink">
+    {{#each searchedPost}}
+        <a href="/post/{{Id}}" class="postLink">
         <section class = "post"> 
-            <img src="{{this.Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
+            <img src="{{Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
             <div id = "postInfo">
-                <h3>{{this.Title}}</h3>
+                <h3>{{Title}}</h3>
                 
-                <p>{{this.Prise}} Kr</p>
+                <p>{{Prise}} Kr</p>
                 <p id = "postParagraph">{{this.Description}}</p>
             </div>
         </section>
