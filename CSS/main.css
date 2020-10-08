@@ -3,9 +3,19 @@ html{
 }
 body {
     margin: 0;
+    background-color: #F9F7F6;
     font-family: Arial, Helvetica, sans-serif;
   }
-  
+#sendBtn{
+  width: 100%;
+  Color: #0B1457;
+  border-color: #0B1457;
+}
+#sendBtn:hover{
+  color: White;
+  background-color: #0B1457;
+}
+
   .topnav {
     overflow: hidden;
     background-color: #0B1457;
@@ -29,18 +39,37 @@ body {
     text-decoration: none;
     font-size: 17px;
   }
-
+  .topNav form {
+    height: 100%;
+    width: 20px;
+  }
   .topnav a:hover {
     background-color: #ddd;
     color: black;
   }
-  .topnav #UploadBtn{
-    background-color: #2196F3;
+  .AdminBtn{
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    background-color: #6AAD1D;
+    margin-left:5px;
   }
- #UploadBtn:hover {
+  .AdminBtn:hover {
     background-color: #ddd;
-    color: black;  
+    color: #0B1457;  
   }
+  .LogOutBtn{
+    height: 100%;
+    border: none;
+    color: white;
+    background-color: #D1431B;
+  }
+ 
+  
   
   .topnav a.active {
     background-color: #2196F3;
@@ -96,7 +125,7 @@ body {
   border-style: solid;
   border-color: #0B1457;
   border-width: 2px;
-  border-radius: 5px;
+  border-radius: 4px;
   height: 100%;
   max-height: 600px;
 }
@@ -132,6 +161,25 @@ body {
   max-width: 40%;
   font-size: 10px;
 }
+/* === category Page === */
+#categoriesPage{
+  display: block;
+  margin:auto;
+  margin-top: 50px;
+}
+#categoriesSettings{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 90%;
+  margin: auto;
+}
+.categorySetting{
+  width: 48%;
+}
+#categoriesList li{
+  color: black;
+}
 /* === Posts -- index page === */
 .posts{
   width: 80%;
@@ -140,6 +188,7 @@ body {
   align-items: center;
   flex-wrap: wrap;
   margin-top: 20px;
+  background-color: #F9F9F6;
 }
 
 .post{
@@ -148,31 +197,30 @@ body {
   padding: 5px;
   margin: 10px;
   border-style: solid;
-  border-radius: 3px;
+  border-radius: 4px; 
   border-width: 2px;
   border-color: #0B1457;
-  background-color: #f9f9f9;
+  background-color: #fff;
   display: flex; 
   flex-direction: column;
   justify-content: space-between;
 }
-#postImage{
-  height: 50%;
-  padding: 0;
+.post:hover{
+  background-color: #fff;
+  box-shadow: 0 0 10px #0B1457;
+  text-decoration: none;
+  color: black;
 }
-#postImage{ 
+#postImage{
+  height:auto;
+  max-height: 50%;
+  width: 100%;
+  padding: 0;
   border-bottom-style:solid;
   border-right-style: solid;
   border-color: #0B1457;
-  border-radius: 3px;
+  border-radius: 4px;
   border-width: 2px;
-}
-
-.post:hover{
-    background-color: #fff;
-    box-shadow: 0 0 10px #0B1457;
-    text-decoration: none;
-    color: black;
 }
 #postInfo{
   display: flex;
@@ -181,8 +229,10 @@ body {
   text-align: center;
   color: black;
   text-decoration: none;
-  padding: 0;
   height: 45%;
+  width:100%;
+  border-top-style: dashed;
+  border-top-color: #2196F3;
 }
 #postInfo h3, #postInfo p{
   padding: 0;
@@ -198,18 +248,20 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  max-width: 95%;
   padding: 0;
 }
 
 #editBtn{
   border: 2px solid #0B1457;
-  background-color: #ED1457;
-  border-radius: 5px;
+  background-color: #6AAD1D;
+  padding: 14px 32px;
+  border-radius: 4px;
 }
 #editBtn:hover{
   background-color: #2196F3;
   color: #fff;
-  border-radius: 5px;
+  border-radius: 4px; 
 }
 /* ==== Footer ==== */
 .footer{
@@ -221,6 +273,9 @@ body {
   align-items: center; 
   margin-top: 20px;
 }
+#toTopDiv{
+  display: none
+}
 .FootSec{
   width:300px;
 }
@@ -228,12 +283,19 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  width:100%;
+  height: auto;
   padding: 0px;
   margin: 0px;
 }
+.FootDiv p{
+  padding: 0px;
+}
 #LoginBtn{
   padding: 0px;
+  margin:auto;
   margin-right: 5px;
+  text-align: center;
   color: black;
 }
 #LoginBtn:hover{
@@ -246,7 +308,7 @@ body {
 
 }
 .FootSec span{
-  color: #ED1457;
+  color: #D1431B;
 }
 .FootSec a{
   text-decoration: none;
@@ -262,16 +324,7 @@ body {
   color: black;
   text-align: end;
 }
-#LogOutBtn{
-  background-color: white;;
-  border: none;
-  color: black;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  margin-right: 5px;
-  cursor: pointer;
-}
+
 
 /* === Contact Page === */
 
@@ -310,7 +363,7 @@ body {
   background-color: #0B1457;
   color: white;
   text-align: center;
-  border-radius:2px; 
+  border-radius: 4px; 
   padding-top:5px;
   padding-bottom: 5px;  
 }
@@ -343,6 +396,15 @@ body {
   max-width: 1300px;
   width: 90%;
   margin-top: 50px;
+  padding-top: 0px;
+  background-color: #ffF;
+  border-radius: 4px;
+}
+#postIMG{
+  width: 30%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 4px; 
 }
 #postDiv{
   display: flex;
@@ -394,7 +456,6 @@ body {
 
 @media screen and (max-width: 1000px){
   /* === Tab Post Page === */
- 
   .postSection{
     display: flex;
     flex-direction: column;
@@ -403,9 +464,8 @@ body {
     width: 100%;
     max-width: 500px;
   }
-  .postSection img{
-    border-radius: 5px;
-    border: 2px solid #0B1457;
+  #postIMG{
+    border-radius: 4px;
   }
   .sellerContact{
     display: flex;
@@ -432,6 +492,7 @@ body {
     #searchBTN{
       width:100%;
     }
+
     /* === Mobile Posts Section === */
     .posts{
       margin: auto;
@@ -444,30 +505,50 @@ body {
     }
     
     .post{
-        max-width: 100%;
+        width: 100%;
+        min-width: 250px;
+        max-width: 500px;
         height: 100%;
         max-height: 500px;
         padding: 5px;
         border-style: solid;
-        border-radius: 5px;
+        border-radius: 4px; 
         border-width: 2px;
         border-color: #0B1457;
         background-color: #fff;
         display: flex; 
         flex-direction: column;
         justify-content: space-between;
+        margin: auto;
+        margin-top: 20px;
+        
     }
     .LastestPosts{
       display: none;
     }
-
+    #postInfo{
+      width: 100%;
+      max-width: 350px;
+    }
     #postImage{
-      max-height: 500px;
+      max-height: 550px;
       height: 100;
       max-width: 350px;
     }
     /* === Mobile Post Page === */
-
+    .postSection{
+      width: 95%;
+      margin: auto;
+    }
+    #postIMG{
+      width:100%;
+      height: auto;
+      border-style: none;
+    }
+    #postDiv{
+      width: 90%;
+      max-width:500px;
+    }
 
     /* === Mobile Footer Section === */
     .footer{
@@ -485,7 +566,13 @@ body {
       margin-top: 20px;
       max-width:90%;
     }
-
+    #toTopDiv{
+      display:block;
+    }
+    #toTop{
+      text-decoration: none;
+      color: #ED1457;
+    }
     /* === Settings Mobile Page === */
     .SettingsManagment{
       width:90%;

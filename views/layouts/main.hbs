@@ -19,7 +19,12 @@
                 {{#if IndexPage}}
                 <a href="#footer" id="toFooter"> Footer </a>{{/if}}
                 {{#if isLoggedIn}}
-                <a  id = "UploadBtn" href="../upload">Upload</a>{{/if}}
+                <a  class = "AdminBtn" href="../upload">Upload</a>
+                <a  class = "AdminBtn" href="../categories">Categories</a>
+                <form action="/logOut" method="POST">  
+                    <button class="AdminBtn LogOutBtn">Logout</button>
+                </form> 
+                {{/if}}
             </div>
             {{#if SearchError}}
             <ul>
@@ -29,8 +34,8 @@
             </ul>
             {{/if}}
             <div class="search-container">
-              <form action="/searching:?" method="POST">
-                <input type="text" p laceholder="Search.." name="search" required>
+              <form action="/searching?" method="GET">
+                <input type="text" placeholder="Search.." name="search" required>
                 <button id="searchBTN"type="submit"><i class="fa fa-search"></i></button>
               </form>
             </div>
@@ -40,34 +45,30 @@
  
 {{{body}}}
 
-<footer> 
-    <div class ="footer" id="footer">
-        <div class = "FootSec"> 
-            <h4>Contact <span> US </span></h4>
-            <ul> 
-                <a href = "../contact.hbs"><li>Email: service@pickngo.com</li></a>
-                <li>Phone Number: 07 xxxxxxxxx </li>
-            </ul>
+    <footer> 
+        <div class ="footer" id="footer">
+            <div class = "FootSec" id="toTopDiv"><a href="#topNav" id="toTop"><h3> Top &#8593</h3></a></div>
+            <div class = "FootSec"> 
+                <h4>Contact <span> US </span></h4>
+                <ul> 
+                    <a href = "../contact.hbs"><li>Email: service@pickngo.com</li></a>
+                    <li>Phone Number: 07 xxxxxxxxx </li>
+                </ul>
+            </div>
+            <div class = "FootSec"> 
+                <a href = "../about.hbs">
+                    <h4>About <span> pickNgo </span></h4>
+                    <p id = "AboutSummary">In This Page, You can buy used stuff from Me in a very good condition</p>
+                </a>
+            </div>
         </div>
-        <div class = "FootSec"> 
-            <a href = "../about.hbs">
-                <h4>About <span> pickNgo </span></h4>
-                <p id = "AboutSummary">In This Page, You can buy used stuff from Me in a very good condition</p>
-            </a>
+        <div class="FootDiv"> 
+            {{#unless isLoggedIn}}
+                <a  id = "LoginBtn" href="../login">Login</a>
+            {{/unless}}
+            
+            <p id = "CopyR"> &copy;2020,maab19rl</p>
         </div>
-     
-    </div>
-    <div class="FootDiv"> 
-        {{#unless isLoggedIn}}
-            <a  id = "LoginBtn" href="../login">Login</a>
-        {{/unless}}
-        {{#if isLoggedIn}}
-        <form action="/logOut" method="POST">  
-            <button id="LogOutBtn">Logout</button>
-        </form> 
-        {{/if}}
-        <p id = "CopyR"> &copy;2020,maab19rl</p>
-    </div>
     </footer>
 </body>
 </html>

@@ -1,18 +1,17 @@
 <div class = "postSection">
         {{#if content}}
-        <img src="../{{content.Image}}" alt="img" class = "img-responsive">
+        <img src="../{{content.Image}}" alt="img" class = "img-responsive" id="postIMG">
         <div id = "postDiv">
             <div class = "postInfo">
                 <h2><strong>Title: </strong> {{content.Title}} </h2>
+                <p><strong>Price: </strong>{{content.Price}} $</p>
                 <p><strong>Description: </strong> {{content.Description}}</p>
-                <p><strong>Price: </strong>{{content.Prise}} Kr</p>
             </div>
+            {{#if isLoggedIn}}
+                <a href ="/edit/{{this.Id}}" id = "editBtn"> Edit </a>
+            {{/if}}
         {{/if}}
-        {{#if isLoggedIn}}
-            <form action="/edit" method="POST">
-                <button id = "editBtn"> Edit </button>
-            </form>
-        {{/if}}
+
         <div class="sellerSection"> 
             <h3>Seller Contact Information</h3>
             <div class= "sellerContact">

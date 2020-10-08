@@ -19,15 +19,23 @@
                     </div><br>
                     <div class = "formSection">
                         <label class="form-label" for="title">Title</label>
-                        <input class="form-input" type="text" name="title" placeholder="Ex: Computer" required>
+                        <input class="form-input" type="text" name="title" placeholder="Ex: Bmw " required>
                     </div><br>
                     <div class = "formSection">
                         <label class="form-label" for="description">Description</label>
                         <textarea class="form-input" type="text" name="description" placeholder="Ex: A very good Computer with intel i7 8700 processor and Nividia RTX 2070"></textarea>
                     </div><br>
                     <div class = "formSection">
-                         <label class="form-label" for="prise">Prise</label>
-                        <input class="form-input" type="number" name="prise" placeholder="Ex: 800$" required>
+                         <label class="form-label" for="price">Price</label>
+                        <input class="form-input" type="number" name="price" placeholder="Ex: 800$" required>
+                    </div><br>
+                    <div class="formSection">
+                        <label class="form-label" for=""> Category</label>
+                        <select class="form-select" name="category">
+                            {{#each Category}}
+                            <option value="{{this.Name}}">{{this.Name}}</option>
+                            {{/each}}
+                        </select>
                     </div>
                     <br><hr>
                     <button class = "btn" id ="sendBtn"> Upload </button>
