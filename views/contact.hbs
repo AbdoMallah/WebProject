@@ -1,18 +1,24 @@
 <section id = "contactForm">
-        <h2 id = "ContactTitle">Contact <span>US</span></h2>
-        <div class="form-group">
-            <label class="form-label" for="FullName">Full Name *</label>
-            <input class="form-input" type="text" placeholder="Ex: John Cena">
-            
-            <label class="form-label" for="Email"> Email *</label>
-            <input class="form-input" type="text" placeholder="Ex: example@example.com">
-            
-            <label class="form-label" for="MobilNumber"> Mobil Number *</label>
-            <input class="form-input" type="text" placeholder="Ex: 07 0000 0000 ">
+    <h2 id = "ContactTitle">Contact <span>US</span></h2>
+       {{#if emptyFieldError.length }}
+            <ul>
+                {{#each emptyFieldError}}
+                <p class="errorMSG"> {{this}} </p>
+                {{/each}}
+            </ul>            
+            {{/if}}
+    <div class="form-group" >
+        <form action="/contact" method="POST" >
+            <label class="form-label" for="email"> Email *</label>
+            <input class="form-input" type="text" name="email" placeholder="Ex: example@example.com" required>
 
-            <label class="form-label" for="MSG_Content"> Message Content *</label>
-            <textarea  class="form-input" type="text" placeholder="Ex: How Are you?"></textarea>
+            <label class="form-label" for="subject">Subject *</label>
+            <input class="form-input" type="text" name="subject" placeholder="Ex: Iphone X">
+
+            <label class="form-label" for="msgContent"> Message Content *</label>
+            <textarea  class="form-input" type="text" name="msgContent" placeholder="Ex: Do you have a new/unused Iphone X?"></textarea>
             <br>
             <button class = "btn" id = "sendBtn"> Send </button>
-        </div>
-    </section>
+        </form>
+    </div>
+</section>

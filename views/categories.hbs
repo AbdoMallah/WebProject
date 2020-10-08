@@ -1,18 +1,19 @@
-<div id="categoriesPage"> 
+<div id="categoriesPage">
     <h1> Categories Settings</h1>
-    <h2> My Categories</h2>
-    <ul id="categoriesList"> 
-    {{#if data}}
-        {{#each data}}
-        <li> {{this.Name}} </li>
-        {{/each}}
-    {{/if}}
-        {{!-- <li> Cars </li> --}}
-    {{#unless data}}
-        <li> No Categories Yet </li>
-    {{/unless}}
-    </ul>
-    <br> 
+    <div class = "categorySetting">
+        <h2> My Categories</h2>
+        <ul id="categoriesList"> 
+        {{#if data}}
+            {{#each data}}
+            <li> {{this.Name}} -- <a href="/categories/editC/{{this.Id}}"> Edit </a> </li>
+            {{/each}}
+        {{/if}}
+            {{!-- <li> Cars </li> --}}
+        {{#unless data}}
+            <li> No Categories Yet </li>
+        {{/unless}}
+        </ul>
+    </div>
     <div id="categoriesSettings">
         <div class="categorySetting"> 
             <h2> Add Category </h2>

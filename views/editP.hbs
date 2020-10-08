@@ -1,6 +1,6 @@
 <div class="form-group" id="edit-form-group">
     {{#if selectedPost}}
-    <form action="/editing?" method="GET">
+    <form action="/editP/post={{selectedPost.Id}}" method="POST">
         <div class = "formSection">
             <label class="form-label" for="title">Title</label>
             <input class="form-input" type="text" name="title" placeholder="Ex: Bmw " value="{{selectedPost.Title}}" required>
@@ -14,10 +14,10 @@
             <input class="form-input" type="number" name="price" placeholder="Ex: 800$" value="{{selectedPost.Price}}" required>
         </div><br>
         <div class="formSection">
-            <label class="form-label" for=""> Category</label>
+            <label class="form-label" for="category"> Category</label>
             <select class="form-select" name="category">
                 {{#each selectedCategories}}
-                <option value="{{Name}}">{{Name}}</option>
+                <option value="{{Id}}">{{Name}}</option>
                 {{/each}}
             </select>
         </div>

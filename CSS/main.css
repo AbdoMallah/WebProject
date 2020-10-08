@@ -201,18 +201,51 @@ body {
   margin:auto;
   margin-top: 50px;
 }
+#categoriesPage h1{
+  text-align: center;
+}
 #categoriesSettings{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  flex-wrap: wrap;
   width: 90%;
   margin: auto;
 }
+
 .categorySetting{
-  width: 48%;
+  width: 100%;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20px;
 }
+.categorySetting #sendBtn{
+  width:20%;
+}
+#categoriesList{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 #categoriesList li{
   color: black;
+  list-style-type: none;
+  margin-right: 10px;
+  border:solid 1px #0B1457;
+  height: auto;
+  padding-left: 2px;
+}
+#categoriesList li a{
+  color: white;
+  text-decoration: none;
+  background-color: #0B1457;
+  padding:4px;
+}
+#categoriesList li a:hover{
+  color: #0B1457;
+  text-decoration: none;
+  background-color: #2196F3;
 }
 /* === Posts -- index page === */
 .posts{
@@ -289,11 +322,13 @@ body {
 #editBtn{
   border: 2px solid #0B1457;
   background-color: #6AAD1D;
+  color: #0B1457;
+  text-align: center;
   padding: 14px 32px;
   border-radius: 4px;
 }
 #editBtn:hover{
-  background-color: #2196F3;
+  background-color: #0B1457;
   color: #fff;
   border-radius: 4px; 
 }
@@ -380,7 +415,11 @@ body {
   color: #ED1457;
 
 }
-
+ /* === Thx Message Page === */
+.thxMsgDiv{
+  text-align: center;
+  margin-top: 50px;
+}
 /* === About Page === */
 
 .AboutSection{

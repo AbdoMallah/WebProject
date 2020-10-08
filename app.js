@@ -5,11 +5,12 @@ const cookieParser  = require('cookie-parser')
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3')
 const bcrypt = require('bcrypt') //uses to hash password, don't need it in is Projekt. 
-const http = require('http')
 const fs = require('fs')
 const path = require('path')
 const multer = require('multer');
 const moment = require('moment');
+const nodemailer = require('nodemailer');
+
 const app = express()
 const port = 8000
 let db = new sqlite3.Database('database.db');
@@ -17,6 +18,15 @@ let db = new sqlite3.Database('database.db');
 const ADMIN_USERNAME = 'Admin';
 const ADMIN_PASSWORD = 'test123';
 
+async function hashIt(password){
+    const salt = await bcrypt.genSalt(6);
+    const hashed = await bcrypt.hash(password, salt);
+  }
+let hashed_PASS = hashIt(ADMIN_PASSWORD)
+let hP = hashed_PASS.toString();
+async function compareIt(password, hashedPassword){
+    const validPassword = await bcrypt.compare(password, hashedPassword);
+}
 /* === Functions === */
 let last =  function(array, n) {
     if (array == null) {return void 0;}
@@ -27,6 +37,15 @@ function changeDateFormat(dateInMilliSeconds){
     return moment(dateInMilliSeconds).format('MMMM MM YYYY h:mm:ss');
 }
 
+/* === Send Mail === */
+let transporter = nodemailer.createTransport({
+    
+    service: 'gmail',
+    auth: {
+      user: "pickitngo@gmail.com",
+      pass: "8w9s23X6aHMI"
+    }
+  });
 
 /* === DataBase === */ 
 function createPostsTable(){
@@ -108,8 +127,13 @@ app.post('/login', async(req, res ) => {
         validationErr.push('Wrong Password');   
     }
     if(validationErr.length == 0){
-        req.session.isLoggedIn = true;
-        res.redirect('/')
+        if(compareIt(ADMIN_PASSWORD, hP)){
+            req.session.isLoggedIn = true;
+            res.redirect('/')
+        }else{
+            console.log("The server could not compare the password with the hashed Password")
+        }
+        
     }else{
         const model = {validationErr}
         res.render('login.hbs', model)
@@ -207,6 +231,77 @@ app.post('/delete-category', (req, res) => {
         }
         res.render('/categories.hbs', model)
     } 
+})
+app.post('/editP/post=:Id', (req, res) => {
+    const id = req.params.Id
+    const title = req.body.title
+    const description = req.body.description
+    const price = req.body.price
+    const category = req.body.category
+    const emptyFieldError = [];
+    if(!title || !description || !price || !category){
+        emptyFieldError.push('You can not update a post with empty fields')
+    }
+    else{
+        const updateQuery = 'UPDATE posts SET Title = ?, Description = ?, Price = ?, CategoryId = ? WHERE Id = ?'
+        const updatedValues = [title, description, price, category, id]
+        db.run(updateQuery, updatedValues, async(error)=> {
+            if(!error){
+                res.redirect('/post/'+id)
+            }else{
+                res.send(error)
+            }
+
+        })
+    }
+})
+app.post('/editC/categoryId=:Id', (req, res) => {
+    const id = req.params.Id
+    const name = req.body.name
+
+    const emptyFieldError = [];
+    if(!name ){
+        emptyFieldError.push('You can not update category name with empty fields')
+    }
+    else{
+        const updateQuery = 'UPDATE categories SET Name = ? WHERE Id = ?'
+        const updatedValues = [name, id]
+        db.run(updateQuery, updatedValues, async(error)=> {
+            if(!error){
+                res.redirect('/categories')
+            }else{
+                res.send(error)
+            }
+        })
+    }
+})
+app.post('/contact', (req, res) => {
+    const senderEmail = req.body.email
+    const subject = req.body.subject
+    const msgContent = req.body.msgContent
+    const emptyFieldError = []; 
+    if(senderEmail && subject && msgContent){
+        let mailOptions = {
+            from: ''+senderEmail+'',
+            to: 'pickitngo@gmail.com',
+            subject: ''+subject+'',
+            text: ''+msgContent+''
+        };
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+            console.log(error);
+            } else {
+            console.log('Email sent: ' + info.response);
+            res.redirect('/thxMessage')
+            }
+        });
+    }else{
+        emptyFieldError.push('You can not send email with empty fields')
+        const model = {
+            emptyFieldError
+        }
+        res.render('contact.hbs', model)
+    }
 })
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
@@ -308,7 +403,7 @@ app.get('/categories', (req, res) => {
     }
     else{   res.redirect('/login')}
 })
-app.get('/post/edit/:Id', (req, res) => {
+app.get('/post/editP/:Id', (req, res) => {
     if(req.session.isLoggedIn){
         const id = req.params.Id
         const selectPostQuery = "SELECT * FROM posts WHERE Id = ?"
@@ -319,7 +414,7 @@ app.get('/post/edit/:Id', (req, res) => {
                 db.all(selectCategoriesQuery,[], async(error, selectedCategories) => {
                     if(!error){
                     const model = {selectedPost, selectedCategories}
-                    res.render('edit.hbs', model)
+                    res.render('editP.hbs', model)
                 }
                 else{
                     res.send('Second Query: '+error)
@@ -331,6 +426,28 @@ app.get('/post/edit/:Id', (req, res) => {
             }
         })
     }else{res.redirect('/login')}
+})
+app.get('/categories/editC/:Id', (req, res) => {
+    if(req.session.isLoggedIn){
+        const id = req.params.Id
+        const selectCategoryQuery = "SELECT * FROM categories WHERE Id = ?"
+        const value = [id]
+        // console.log('id --> '+ id)
+        db.get(selectCategoryQuery, value, async(error, selectedCategory) => {
+            if(!error){
+                const model = {selectedCategory}
+                // res.send('Hi')
+                // console.log('model --> ' + model)
+                res.render('editC.hbs', model)
+            }
+            else{
+                res.send(error)
+            }
+        })
+    }else{res.redirect('/login')}
+})
+app.get('/thxMessage', (req, res) => {
+    res.render('thxMessage.hbs')
 })
 app.listen(port)
 

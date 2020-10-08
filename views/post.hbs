@@ -1,5 +1,5 @@
 <div class = "postSection">
-        {{#if content}}
+    {{#if content}}
         <img src="../{{content.Image}}" alt="img" class = "img-responsive" id="postIMG">
         <div id = "postDiv">
             <div class = "postInfo">
@@ -7,10 +7,7 @@
                 <p><strong>Price: </strong>{{content.Price}} $</p>
                 <p><strong>Description: </strong> {{content.Description}}</p>
             </div>
-            {{#if isLoggedIn}}
-                <a href ="/post/edit/{{content.Id}}" id = "editBtn"> Edit </a>
-            {{/if}}
-        {{/if}}
+          
 
         <div class="sellerSection"> 
             <h3>Seller Contact Information</h3>
@@ -20,5 +17,9 @@
                 <p>Phone Number: 07 29757160 </p>
             </div>
         </div>
+        {{#if isLoggedIn}}
+        <a href ="/post/editP/{{content.Id}}" id="editBtn"> Edit </a>
+        {{/if}}
+    {{/if}}
     </div> 
 </div>
