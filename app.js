@@ -49,7 +49,7 @@ let transporter = nodemailer.createTransport({
 
 /* === DataBase === */ 
 function createPostsTable(){
-    const Query = 'CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Price NUMBER NOT NULL, CategoryID INTEGER NOT NULL,Image TEXT NOT NULL, Date TEXT NOT NULL, FOREIGN KEY (CategoryID) REFERENCES categories(Id))';
+    const Query = 'CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Price NUMBER NOT NULL, CategoryID INTEGER NOT NULL,Image TEXT NOT NULL, Date TEXT NOT NULL, FOREIGN KEY (CategoryID) REFERENCES categories(Id) ON UPDATE CASCADE ON DELETE CASCADE)';
     db.run(Query, function(err){
         if(err){  
             const errMSG = 'Could Not Create The Table';
@@ -119,7 +119,9 @@ app.post('/login', async(req, res ) => {
     const validationErr = [];
     const enteredUsername = req.body.username 
     const enteredPassword = req.body.password  
-   
+    if(enteredPassword.length < 6){
+        validationErr.push('To short password')
+    }
     if(enteredUsername != ADMIN_USERNAME){
         validationErr.push('Wrong Username');
     }
@@ -370,8 +372,7 @@ app.get('/searching?:search', (req, res) => {
             if(error){
                 res.send(error + ' Server error, could not select data from the database')
             }
-            // res.send(searchedPost)
-            if(!searchedPost){
+            if(searchedPost.length == 0){
                 SearchError.push('There are no content with this Title: '+searchTerm.slice('1','-1')+' OR Category: '+searchTerm.slice('1','-1'))
                 const model = {SearchError}
                 res.render('searched.hbs', model)
