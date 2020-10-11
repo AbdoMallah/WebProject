@@ -1,0 +1,42 @@
+<div class = "ordersPage">
+    <h1> Orders </h1>
+    {{#if ordersValue}}
+    <div class="form-group">
+        <form action="/filter-order" method="POST">
+            <div class="form-group">
+            <label class="form-radio form-inline">
+                <input type="radio" name="sent"  value="unsent"><i class="form-icon"></i> Unsent
+            </label>
+            <label class="form-radio form-inline">
+                <input type="radio" name="sent" value="sent"><i class="form-icon"></i> Sent
+            </label>
+            <label class="form-radio form-inline">
+                <input type="radio" name="sent" checked="" value="showAll"><i class="form-icon"></i> Show All
+            </label>
+            <button type="submit"> Filter </button>
+            </div> 
+        </form>
+    </div>
+    <div class = "orders"> 
+        {{#each ordersValue}}
+        <div id = "orderInfo">
+            <h3>Name: {{this.BuyerName}}</h3>
+            <p>Id: {{this.Id}}</p>
+            <p>Email:{{this.BuyerEmail}}</p>
+            <p>Address: {{this.BuyerAddress}}</p>
+            <p>Zip Code: {{this.BuyerZipCode}}</p>
+            <p>Send: {{this.IfSend}} (0 = Not Sent, 1 = Sent)</p>
+            {{#unless this.IfSend}}
+            <p> The Product Has Not Been Shipped Yet :O</p>
+            <a href="send/orderId={{this.Id}}" class="btn" id="sendBtn"> Send Order</a>
+            {{else}}
+            <p> The Product Has Already Been Shipped :D</p>
+            <a href="delete/orderId={{this.Id}}" class="btn" id="deleteBtn">Delete </a>
+            {{/unless}}
+        </div>
+        {{/each}}
+    </div>
+    {{else}}
+        <p> No Orders Yet </p>
+    {{/if}}
+</div>

@@ -13,12 +13,16 @@
             <h3>Seller Contact Information</h3>
             <div class= "sellerContact">
                 <p>By: Abdel Rahman Mallah  </p>
-                <p>Email: abdowabdo1998@gmail.com </p>
+                <p>Email: pickitngo@gmail.com </p>
                 <p>Phone Number: 07 29757160 </p>
             </div>
         </div>
         {{#if isLoggedIn}}
-        <a href ="/post/editP/{{content.Id}}" id="editBtn"> Edit </a>
+        <a href ="/post/editP/{{content.Id}}" id="sendBtn"> Edit </a>
+        <a href ="/post/deleteP/{{content.Id}}" id="deleteBtn"> DELETE </a>
+
+        {{else}}
+        <a href="/buy/{{content.Id}}" class="postBtn"> Order </a>
         {{/if}}
     {{/if}}
     </div> 

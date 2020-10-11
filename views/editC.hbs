@@ -1,10 +1,17 @@
-<div class="form-group" id="edit-form-group">
+<div class="form-group FormPages">
+    {{#if errMSG}}
+    <ul> 
+        {{#each errMSG}}
+        <p class="errorMSG"> {{this}} </p>
+        {{/each}}
+    </ul>            
+    {{/if}}
+    <h2> Category Settings Page </h2>
     {{#if selectedCategory}}
     <form action="/editC/categoryId={{selectedCategory.Id}}" method="POST">
-        <div class = "formSection">
-            <label class="form-label" for="name">Category Name</label>
-            <input class="form-input" type="text" name="name" placeholder="Ex: car " value="{{selectedCategory.Name}}" required>
-        </div><br>
+        <label class="form-label" for="name">Category Name</label>
+        <input class="form-input" type="text" name="name" placeholder="Ex: car " value="{{selectedCategory.Name}}" required>
+        <br>
         <br><hr>
         <button class = "btn" id ="sendBtn"> Edit </button>
     </form> 

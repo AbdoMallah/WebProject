@@ -1,26 +1,30 @@
-<div class="form-group" id="edit-form-group">
+<div class="form-group FormPages">
+    {{#if errMSG}}
+    <ul> 
+        {{#each errMSG}}
+        <p class="errorMSG"> {{this}} </p>
+        {{/each}}
+    </ul>            
+    {{/if}}
+    <h2> Edit Post Page</h2>
     {{#if selectedPost}}
     <form action="/editP/post={{selectedPost.Id}}" method="POST">
-        <div class = "formSection">
+
             <label class="form-label" for="title">Title</label>
             <input class="form-input" type="text" name="title" placeholder="Ex: Bmw " value="{{selectedPost.Title}}" required>
-        </div><br>
-        <div class = "formSection">
+            <br>
             <label class="form-label" for="description">Description</label>
             <textarea class="form-input" type="text" name="description">{{selectedPost.Description}}</textarea>
-        </div><br>
-        <div class = "formSection">
-                <label class="form-label" for="price">Price</label>
+            <br>
+            <label class="form-label" for="price">Price</label>
             <input class="form-input" type="number" name="price" placeholder="Ex: 800$" value="{{selectedPost.Price}}" required>
-        </div><br>
-        <div class="formSection">
+            <br>
             <label class="form-label" for="category"> Category</label>
             <select class="form-select" name="category">
                 {{#each selectedCategories}}
                 <option value="{{Id}}">{{Name}}</option>
                 {{/each}}
             </select>
-        </div>
         <br><hr>
         <button class = "btn" id ="sendBtn"> Edit </button>
     </form> 

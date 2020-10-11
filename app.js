@@ -10,12 +10,13 @@ const path = require('path')
 const multer = require('multer');
 const moment = require('moment');
 const nodemailer = require('nodemailer');
+const { send } = require('process');
 
 const app = express()
 const port = 8000
 let db = new sqlite3.Database('database.db');
 /* === Admin === */
-const ADMIN_USERNAME = 'Admin';
+const ADMIN_USERNAME = 'admin';
 const ADMIN_PASSWORD = 'test123';
 
 async function hashIt(password){
@@ -23,7 +24,7 @@ async function hashIt(password){
     const hashed = await bcrypt.hash(password, salt);
   }
 let hashed_PASS = hashIt(ADMIN_PASSWORD)
-let hP = hashed_PASS.toString();
+let hashPass = hashed_PASS.toString();
 async function compareIt(password, hashedPassword){
     const validPassword = await bcrypt.compare(password, hashedPassword);
 }
@@ -48,12 +49,35 @@ let transporter = nodemailer.createTransport({
   });
 
 /* === DataBase === */ 
+function enableForeignKey()
+{   
+    const Query = 'PRAGMA foreign_keys = ON'
+    db.run(Query, [], async(error) => {
+        if(error){
+            console.log('Foreign Key ERROR --> ' + error )
+        }else {
+            console.log('Query Successfully exectued')
+        }
+    })
+}
+function DisableForeignKey()
+{   
+    const Query = 'PRAGMA foreign_keys = OFF'
+    db.run(Query, [], async(error) => {
+        if(error){
+            console.log('Foreign Key ERROR --> ' + error )
+        }else {
+            console.log('Query Successfully exectued')
+        }
+    })
+}
+
 function createPostsTable(){
-    const Query = 'CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Price NUMBER NOT NULL, CategoryID INTEGER NOT NULL,Image TEXT NOT NULL, Date TEXT NOT NULL, FOREIGN KEY (CategoryID) REFERENCES categories(Id) ON UPDATE CASCADE ON DELETE CASCADE)';
+    const Query = 'CREATE TABLE IF NOT EXISTS posts ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT NOT NULL, Description TEXT NOT NULL, Price REAL NOT NULL, CategoryID INTEGER NOT NULL, Image TEXT NOT NULL, Date TEXT NOT NULL, OrderId INTEGER NOT NULL, FOREIGN KEY (OrderId) REFERENCES orders(Id) ON UPDATE CASCADE ON DELETE CASCADE,FOREIGN KEY (CategoryID) REFERENCES categories(Id) ON UPDATE CASCADE ON DELETE CASCADE)';
     db.run(Query, function(err){
         if(err){  
-            const errMSG = 'Could Not Create The Table';
-            return console.error(errMSG);   
+            const errMSG = 'Could Not Create The Posts Table';
+            return console.error(errMSG + '/n' + err);   
         }
         else{   console.log('Query Successfully exectued'); }
     })
@@ -63,17 +87,29 @@ function createCategoriesTable(){
     const Query = 'CREATE TABLE IF NOT EXISTS categories ( Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL)';
     db.run(Query, function(err){
         if(err){  
-            const errMSG = 'Could Not Create The Table';
-            return console.error(errMSG);   
+            const errMSG = 'Could Not Create The Category Table';
+            return console.error(errMSG + '/n' + err);   
         }
         else{   console.log('Query Successfully exectued'); }
     })
 
 }
-function selectQuery(table, id=false){
-    return 'SELECT * FROM '+table; 
-}
+function createOrderTable(){
+    const Query = 'CREATE TABLE IF NOT EXISTS orders (Id INTEGER PRIMARY KEY AUTOINCREMENT,BuyerName TEXT NOT NULL, BuyerEmail TEXT NOT NULL, BuyerAddress TEXT NOT NULL, BuyerZipCode INTEGER NOT NULL,IfSend INTEGER DEFAULT 0)';
+    db.run(Query, function(err){
+        if(err){  
+            const errMSG = 'Could Not Create The Order Table';
+            return console.error(errMSG + ' ' + err);   
+        }
+        else{   console.log('Query Successfully exectued'); }
+    })
 
+}
+function selectQuery(table){
+    enableForeignKey();
+    return 'SELECT * FROM '+table;
+}
+createOrderTable()
 createPostsTable();
 createCategoriesTable();
 
@@ -129,7 +165,7 @@ app.post('/login', async(req, res ) => {
         validationErr.push('Wrong Password');   
     }
     if(validationErr.length == 0){
-        if(compareIt(ADMIN_PASSWORD, hP)){
+        if(compareIt(ADMIN_PASSWORD, hashPass)){
             req.session.isLoggedIn = true;
             res.redirect('/')
         }else{
@@ -147,23 +183,24 @@ app.post('/logOut', (req, res) => {
 })
 app.post('/upload',(req, res) => {
     const errMSG = []
+    DisableForeignKey();
     upload(req, res, (err) => {
         const Title = req.body.title
         const Description = req.body.description
         const Price = parseInt(req.body.price)
         const Category = req.body.category
         const Filename = req.file.filename
-        //res.send(Title + ' _ ' + Description + ' _ ' + Price + ' _ ' + Category + ' _ ' + Filename)
+        const DefaultOrderId = 0;
         if(errMSG.length == 0){
             if(!Title || !Price || !Filename || !Category){errMSG.push('Fill the required field.')}
             if(typeof Price !== 'number' || Price < 0){ errMSG.push('Price Should Content A  Positiv Number')}
             if(typeof Title !== 'string'){errMSG.push('Title Should Content text, Numbers Only')}
             if(err){errMSG.push('The image has not been uploaded!');}       
-            const insertQuery = "INSERT INTO posts('Title', 'Description', 'Price', 'CategoryId','Image', 'Date') VALUES (?,?,?,?,?,?)";
-            const values =  [Title, Description, Price, Category, Filename, Date.now()]
-            db.run(insertQuery,values, function(error){
+            const insertQuery = "INSERT INTO posts('Title', 'Description', 'Price', 'CategoryId','Image', 'Date', 'OrderId') VALUES (?,?,?,?,?,?,?)";
+            const values =  [Title, Description, Price, Category, Filename, Date.now(), DefaultOrderId]
+            db.run(insertQuery,values,(error) => {
                 if(error){
-                    res.send('The post has not been inserted to the database')
+                    res.send('The post has not been inserted to the database' + error)
                 }
                 else{
                     console.log('File Uploaded Successfully');
@@ -187,30 +224,32 @@ app.post('/upload',(req, res) => {
 app.post('/add-category', (req, res) => {
     const enteredName = req.body.name
     const insertQuery = "INSERT INTO categories('Name') VALUES (?)"
-    const values = [enteredName];
+    const select = selectQuery('categories')
+    const Values = [enteredName]
     const errMSG = []
-    if(values.length > 0){
-        db.run(insertQuery, enteredName, function(error) {
+    if(Values.length != 0){
+        db.run(insertQuery, Values, (error) =>{
             if(error){
-                //res.send(error)
                 res.send('The category has not been inserted to the database')
             }
             else{
-                console.log('A New Category has been added to the database');
-                res.redirect('/categories');
+                console.log('A New Category has been added to the database')
             }
-        })
-    }
-    else{ 
+        })    
+    }else{ 
         errMSG.push('You can not add an empty category')
+    }
+    if(errMSG.length == 0){
+        res.redirect('/categories')
+    }else{
         const model = {
             errMSG
         }
-        res.render('/categories.hbs', model)
-    } 
-
+        res.render('categories.hbs', model)
+    }
 })
 app.post('/delete-category', (req, res) => {
+    enableForeignKey();
     const name = req.body.name
     const deleteQuery = "DELETE FROM categories WHERE Name LIKE ?"
     const values = '%'+name+'%'
@@ -222,17 +261,20 @@ app.post('/delete-category', (req, res) => {
             }
             else{
                 console.log('The '+values.slice('1', '-1')+' category has been deleted from the database');
-                res.redirect('/categories');
+                
             }
         })
     }
     else{ 
-        errMSG.push('You can not delete a category with  empty field')
-        const model = {
-            errMSG
-        }
-        res.render('/categories.hbs', model)
+        errMSG.push('You can not delete a category with empty field')
     } 
+    if(errMSG.length == 0){
+        res.redirect('/categories');
+    }else{
+        const model = {errMSG}
+        res.render('/categories.hbs', model)
+
+    }
 })
 app.post('/editP/post=:Id', (req, res) => {
     const id = req.params.Id
@@ -260,7 +302,6 @@ app.post('/editP/post=:Id', (req, res) => {
 app.post('/editC/categoryId=:Id', (req, res) => {
     const id = req.params.Id
     const name = req.body.name
-
     const emptyFieldError = [];
     if(!name ){
         emptyFieldError.push('You can not update category name with empty fields')
@@ -270,6 +311,7 @@ app.post('/editC/categoryId=:Id', (req, res) => {
         const updatedValues = [name, id]
         db.run(updateQuery, updatedValues, async(error)=> {
             if(!error){
+                // console.log(updatedValues)
                 res.redirect('/categories')
             }else{
                 res.send(error)
@@ -282,6 +324,7 @@ app.post('/contact', (req, res) => {
     const subject = req.body.subject
     const msgContent = req.body.msgContent
     const emptyFieldError = []; 
+    const thxMSG = []
     if(senderEmail && subject && msgContent){
         let mailOptions = {
             from: ''+senderEmail+'',
@@ -294,7 +337,9 @@ app.post('/contact', (req, res) => {
             console.log(error);
             } else {
             console.log('Email sent: ' + info.response);
-            res.redirect('/thxMessage')
+            thxMSG('Thx For sending your Question, I will try to answer as fast as I can :D')
+            const model = {thxMSG}
+            res.render('thxMessage.hbs', model)
             }
         });
     }else{
@@ -305,10 +350,92 @@ app.post('/contact', (req, res) => {
         res.render('contact.hbs', model)
     }
 })
+app.post('/order/post=:Id', (req, res) => {
+    DisableForeignKey();
+    //enableForeignKey();
+    const postId= req.params.Id
+    const buyerName = req.body.name
+    const buyerEmail = req.body.email
+    const buyerAddress = req.body.address
+    const buyerZipCode = req.body.zipCode
+    const defaultValue = 0;
+    const insertQuery = "INSERT INTO orders('BuyerName', 'BuyerEmail', 'BuyerAddress', 'BuyerZipCode', 'IfSend') VALUES (?,?,?,?,?)"
+    const errMSG = []
+    const thxMSG = []
+    if(!buyerName|| !buyerEmail||!buyerAddress || !buyerZipCode){
+        errMSG.push('You can buy without filling the fields')
+        const model = {errMSG}
+        res.render('buy.hbs/'+postId, model)
+    }else{
+        const insertedValues = [buyerName, buyerEmail, buyerAddress, buyerZipCode, defaultValue]
+        db.run(insertQuery, insertedValues, (error) => {
+            if(!error){
+                const selectOrderID = selectQuery('orders')
+                db.get(selectOrderID, [], async(error, ordersValue) => {
+                    if(!error){
+                        const updatePostOrderID = 'UPDATE posts SET OrderId = ? WHERE Id = ?'
+                        const updatedValues = [ordersValue.Id, postId]
+                        //  console.log(ordersValue.Id + ' || ' + postId)
+                        db.run(updatePostOrderID, updatedValues, (error) => {
+                            if(!error){
+                                thxMSG.push('Thx For choosing pickItNGo, We will send you an email with all the information you need :D')
+                                const model = {thxMSG}
+                                res.render('thxMessage.hbs', model)
+                            }else{
+                                res.send('Update Error --> ' + error)
+                            }
+                        })
+                    }else{
+                        res.send('Select Error --> ' + error)
+                    }
+                })
+            }else{
+                res.send('We have an error to complete your order, try to refresh the site or try agian later Thx :D ')
+            }
+        })
+    }
+})
+app.post('/send/OrderId=:Id', (req, res) => {
+    const id = req.params.Id
+    const updateIfSendColumn = 'UPDATE orders SET IfSend = ? WHERE Id = ?'
+    const sentValue = 1
+    const updatedValues = [ sentValue,id]
+    db.run(updateIfSendColumn, updatedValues, async(error) => {
+        if(!error){
+            //console.log(updatedValues)
+            res.redirect('/orders')
+        }else{
+            res.send('Database table orders has not been updated, ERROR --> ' + error)
+        }
+    }) 
+})  
+app.post('/filter-order', (req, res) => {
+    const ifSent = req.body.sent
+    const changeSentValue = []
+    if(ifSent == 'sent'){
+        changeSentValue.push(1)
+    }
+    if(ifSent == 'unsent') {
+        changeSentValue.push(0)
+    }
+    if(ifSent == 'showAll'){
+        res.redirect('/orders')
+    }
+    ordersData = 'SELECT * FROM orders WHERE IfSend = ?'
+    db.all(ordersData, changeSentValue, async(error, ordersValue) => {
+        if(!error){
+            const model = {ordersValue}
+            res.render('orders.hbs', model)
+        }else{
+            res.send('Can not get order Value, ERROR --> '+ error)
+        }
+    })
+})
 /* ===== GET ===== */ 
 app.get('/', (req, res) => {
     let IndexPage = true;
-    const Query = selectQuery('posts');
+    enableForeignKey();
+    const Query = 'SELECT * FROM posts WHERE OrderId = 0';
     db.all(Query, [], async(error, selectedPosts) => {
         if(error){ res.send(error) }
         else{
@@ -350,7 +477,7 @@ app.get('/post/:Id', (req, res) => {
     const postID = [id]
     // res.send(Query)
     db.get(Query, postID, async(error, content) => {
-        if(!error){ 
+        if(!error){
             const model = {content}
             res.render('post.hbs', model)}
         else{
@@ -359,12 +486,12 @@ app.get('/post/:Id', (req, res) => {
     })
 })
 app.get('/searching?:search', (req, res) => {
-    const selectQuery = 'SELECT P.*, C.* FROM posts AS P JOIN categories AS C ON P.CategoryId = C.Id WHERE P.Title LIKE ? OR C.Name LIKE ?'
+    const selectQuery = 'SELECT P.*, C.* FROM posts AS P JOIN categories AS C ON P.CategoryId = C.Id WHERE (P.Title LIKE ? OR C.Name LIKE ?) AND P.OrderId LIKE ?'
     const searchTerm = '%'+req.query.search+'%'
+    const unOrded = 0;
     const placeHolderValues = [
-        searchTerm, searchTerm
+        searchTerm, searchTerm, unOrded
     ]
-    // res.send(selectQuery)
     const SearchError = []  
     const errMSG = []
     if(searchTerm !== ''){
@@ -393,8 +520,7 @@ app.get('/about', (req, res) => {
 })
 app.get('/categories', (req, res) => {
     if(req.session.isLoggedIn ){ 
-        // const Query = selectQuery('categories')
-        const Query = 'SELECT * FROM categories'
+        const Query = selectQuery('categories')
         db.all(Query, [], async(error, data) => {
             if(error){ res.send(error+ 'test') }
             const model = { data}
@@ -428,6 +554,19 @@ app.get('/post/editP/:Id', (req, res) => {
         })
     }else{res.redirect('/login')}
 })
+app.get('/post/deleteP/:Id', (req, res) => {
+    const postId = req.params.Id
+    const deleteQuery = 'DELETE FROM posts WHERE Id = ?, OrderID = ?'
+    const values = [postId, 0] 
+    db.run(deleteQuery, values, (error) => {
+        if(!error){
+            console.log('Post With Id: '+ postId +' Has Been Deleted, :D ')
+            res.redirect('/')
+        }else{
+            res.send('Delete ERROR --> ' + error)
+        }
+    })
+})
 app.get('/categories/editC/:Id', (req, res) => {
     if(req.session.isLoggedIn){
         const id = req.params.Id
@@ -450,6 +589,65 @@ app.get('/categories/editC/:Id', (req, res) => {
 app.get('/thxMessage', (req, res) => {
     res.render('thxMessage.hbs')
 })
+app.get('/buy/:Id', (req, res) => {
+    const postId = req.params.Id
+    const selectPostById = 'SELECT * FROM posts WHERE Id = ?' 
+    const values = [postId]
+    db.get(selectPostById, values, async(error, selectedPost)=> {
+        if(!error){
+            const model = {selectedPost} 
+            console.log(model)
+
+            res.render('buy.hbs', model)
+        }else(
+            res.send(error)
+        )
+    })
+    
+})
+app.get('/orders', (req, res) => {
+    if(req.session.isLoggedIn){
+        ordersData = selectQuery('orders')
+        db.all(ordersData, [], async(error, ordersValue) => {
+            if(!error){
+                const model = {ordersValue}
+                res.render('orders.hbs', model)
+            }else{
+                res.send('Can not get order Value, ERROR --> '+ error)
+            }
+        })
+    }else{
+        res.redirect('/login')
+    }
+})
+app.get('/send/OrderId=:Id', (req, res) => {
+    const id = req.params.Id
+    const updateIfSendColumn = 'UPDATE orders SET IfSend = ? WHERE Id = ?'
+    const sentValue = 1
+    const updatedValues = [ sentValue,id]
+    db.run(updateIfSendColumn, updatedValues, async(error) => {
+        if(!error){
+            //console.log(updatedValues)
+            res.redirect('/orders')
+        }else{
+            res.send('Database table orders has not been updated, ERROR --> ' + error)
+        }
+    }) 
+}) 
+app.get('/delete/OrderId=:Id', (req, res) => {
+    const id = req.params.Id
+    const updateIfSendColumn = 'DELETE FROM  orders WHERE Id = ?'
+    db.run(updateIfSendColumn, id, async(error) => {
+        if(!error){
+            //console.log(updatedValues)
+            res.redirect('/orders')
+        }else{
+            res.send('Order with id = ' + id + ' has not been deleted , ERROR --> ' + error)
+        }
+    }) 
+})  
+
+
 app.listen(port)
 
 

@@ -26,11 +26,10 @@
             {{/if}}
             <div class="form-group">
                 <form action="/add-category" method="POST">
-                    <div class = "formSection">
-                        <label class="form-label" for="name">Category name</label>
-                        <input class="form-input" type="text" name="name" placeholder="Ex: Car " required>
-                    </div><br>
-                    <button class = "btn btn-success" id ="sendBtn"> Add </button>
+                    <label class="form-label" for="name">Category name</label>
+                    <input class="form-input" type="text" name="name" placeholder="Ex: Car " required>
+                    <br>
+                    <button class="btn" id ="sendBtn"> Add </button>
                 </form>                
             </div>
         </div>
@@ -45,11 +44,10 @@
             {{/if}}
             <div class="form-group">
                 <form action="/delete-category" method="POST">
-                    <div class = "formSection">
-                        <label class="form-label" for="name">Category name</label>
-                        <input class="form-input" type="text" name="name" placeholder="Ex: Car " required>
-                    </div><br>
-                    <button class = "btn btn-error" id ="sendBtn"> Delete </button>
+                    <label class="form-label" for="name">Category name</label>
+                    <input class="form-input" type="text" name="name" placeholder="Ex: Car " required>
+                    <br>
+                    <button class="btn" id ="deleteBtn"> Delete </button>
                 </form>                
             </div>
         </div>

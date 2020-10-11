@@ -5,15 +5,33 @@ body {
     margin: 0;
     background-color: #F9F7F6;
     font-family: Arial, Helvetica, sans-serif;
-  }
+}
+/* === Buttons === */
+/* 1.submitBtn, 2.deleteBtn*/
 #sendBtn{
   width: 100%;
-  Color: #0B1457;
+  Color: #fff;
+  background-color: #2196F3;
+  border: solid 2px #0B1457;
+  border-radius: 2px;
+}
+#deleteBtn {
+  width: 100%;
+  color: #fff;
+  background-color: #BA2D0D;
+  border: solid 2px #0B1457;
+  border-radius: 2px;
 }
 #sendBtn:hover{
-  color: White;
-  background-color: #0B1457;
+  color: #0B1457;
+  background-color: #ddd;
 }
+#deleteBtn:hover{
+  color: #BA2D0D;
+  background-color: #ddd;
+}
+
+/* ========================== */
 
   .topnav {
     overflow: hidden;
@@ -60,15 +78,13 @@ body {
   .AdminBtn:hover {
     background-color: #ddd;
     color: #0B1457;  
-  }
+  } 
   .LogOutBtn{
     height: 100%;
     border: none;
     color: white;
     background-color: #D1431B;
   }
- 
-  
   
   .topnav a.active {
     background-color: #2196F3;
@@ -214,13 +230,10 @@ body {
 }
 
 .categorySetting{
-  width: 100%;
+  width: 40%;
   text-align: center;
   margin: auto;
   margin-bottom: 20px;
-}
-.categorySetting #sendBtn{
-  width:20%;
 }
 #categoriesList{
   display: flex;
@@ -247,6 +260,33 @@ body {
   text-decoration: none;
   background-color: #2196F3;
 }
+
+/* === Orders PAGE === */
+.ordersPage{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 90%;
+  margin:auto;
+  margin-top:50px;
+}
+.orders{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+}
+#orderInfo{
+  border: solid 2px #0B1457;
+  border-radius: 4px;
+  margin: 10px;
+  padding: 2px;
+  width: 500px;
+  height: 400px;
+  max-height:400px;  
+}
+
 /* === Posts -- index page === */
 .posts{
   width: 80%;
@@ -260,7 +300,8 @@ body {
 
 .post{
   max-width: 250px;
-  height: 350px;
+  height: 100%;
+  max-height: 400px;
   padding: 5px;
   margin: 10px;
   border-style: solid;
@@ -272,6 +313,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
 }
+
 .post:hover{
   background-color: #fff;
   box-shadow: 0 0 10px #0B1457;
@@ -296,13 +338,18 @@ body {
   text-align: center;
   color: black;
   text-decoration: none;
-  height: 45%;
+  height: 50%;
   width:100%;
   border-top-style: dashed;
   border-top-color: #2196F3;
 }
 #postInfo h3, #postInfo p{
   padding: 0;
+  color:black;
+}
+.postLink{
+  height: 440px;
+  color: black;
 }
 .postLink:hover{
     color: black;
@@ -312,26 +359,18 @@ body {
 }
 
 .postParagraph{
+  max-width: 230px;
+  height: 70px;
+  width:95%;
   text-overflow: ellipsis;
+  white-space: pre-wrap;
   overflow: hidden;
-  white-space: nowrap;
-  max-width: 95%;
+  margin: auto;
   padding: 0;
+  color: black;
 }
 
-#editBtn{
-  border: 2px solid #0B1457;
-  background-color: #6AAD1D;
-  color: #0B1457;
-  text-align: center;
-  padding: 14px 32px;
-  border-radius: 4px;
-}
-#editBtn:hover{
-  background-color: #0B1457;
-  color: #fff;
-  border-radius: 4px; 
-}
+
 /* ==== Footer ==== */
 .footer{
   height: 200px;
@@ -402,15 +441,7 @@ body {
   margin: auto;
   margin-top:50px;
 }
-#sendBtn{
-  width: 100%;
-  Color: #0B1457;
-  border-color: #0B1457;
-}
-#sendBtn:hover{
-  color: White;
-  background-color: #0B1457;
-}
+
 #ContactTitle span{
   color: #ED1457;
 
@@ -469,19 +500,21 @@ body {
   width: 90%;
   margin-top: 50px;
   padding-top: 0px;
-  background-color: #ffF;
+  background-color:#fff;
   border-radius: 4px;
 }
 #postIMG{
-  width: 30%;
+  width: 29%;
   max-width: 400px;
   height: auto;
+  margin: auto;
   border-radius: 4px; 
 }
 #postDiv{
   display: flex;
   flex-direction: column;
-  width: 60%;
+  margin:auto;
+  width: 69%;
   padding-left:10px; 
 }
 
@@ -492,16 +525,15 @@ body {
   flex-wrap: wrap;
 }
 
-/* === Upload-Edit Page === */
-.UploadPage, #edit-form-group{
-  width: 50%;
+/* === Upload-Edit-Buy Pages === */
+.FormPages, #edit-form-group{
+  max-width: 500px;
+  min-height: 100%;
   margin: auto;
-  text-align: center;
-  align-items: center;
-  margin-top: 50px;
+  margin-top:50px;
 } 
 
-#UploadHeader{
+.FormPagesHeader{
    display: flex; 
    flex-direction: row;
    justify-content: center;
@@ -526,7 +558,7 @@ body {
   transform: rotate(90deg);
 }
 
-@media screen and (max-width: 1000px){
+@media screen and (max-width: 800px){
   /* === Tab Post Page === */
   .postSection{
     display: flex;
@@ -544,6 +576,7 @@ body {
     flex-direction: column;
   }
 }
+
 
 @media screen and (max-width: 650px) {
     /* === Mobile Nav Section === */
@@ -621,6 +654,16 @@ body {
       width: 90%;
       max-width:500px;
     }
+    /* === Mobile Categories Page === */
+    #categoriesSettings{
+      display: flex; 
+      flex-direction: column;
+      justify-content: center;
+    }
+    .categorySetting{
+      width: 95%;
+    }
+
 
     /* === Mobile Footer Section === */
     .footer{
