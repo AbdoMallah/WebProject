@@ -1,6 +1,6 @@
 
 <section class = "bodySection">
-     {{#if errMSG}}
+    {{#if errMSG}}
     <ul>
         {{#each errMSG}}
         <li class="errorMSG"> {{this}} </li>
@@ -8,7 +8,7 @@
     </ul>
     {{/if}}
     <div class = "posts">
-    {{#each selectedPosts}}
+    {{#each results.postsResults}}
         <a href="/post/{{this.Id}}" class="postLink">
         <section class = "post"> 
             <img src="{{this.Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
@@ -19,9 +19,9 @@
                 <p class="postParagraph">{{this.Description}}</p>
             </div>
         </section>
-        </a> 
+        </a>
         {{else}}
-        <p class="btn btn-error">No Content Yet </p>
+        <p class="btn btn-error">No Content Yet OR All the posts are orders :D </p>
     {{/each}}  
     </div>
     <div class = "LastestPosts">
@@ -40,7 +40,20 @@
                     </div>
                 </div>
             </a>
-        </div> 
+        </div>
+        {{else}}
+        <p class="btn btn-error">No Content Yet OR All the posts are orders :D </p>
         {{/each}}
-    </div>
+    </div>    
 </section>
+<div class="pagination">
+    {{#if prevPage}}
+    <a id="prevPage" href="/index?page={{prevPage.page}}">&laquo; Previous Page</a>
+    {{/if}}
+    {{#each amountPages}}
+    <a class="pagesNumbers" href="/index?page={{this}}">{{this}}</a>
+    {{/each}}
+    {{#if nextPage}}
+    <a id="nextPage" href="/index?page={{nextPage.page}}">Next Page &raquo; </a>
+    {{/if}}
+</div>

@@ -28,7 +28,7 @@
                     <br>
                     <label class="form-label" for=""> Category</label>
                     <select class="form-select" name="category">
-                        {{#each Category}}
+                        {{#each categoriesValue}}
                         <option value="{{this.Id}}">{{this.Name}}</option>
                         {{/each}}
                     </select>

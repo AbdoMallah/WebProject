@@ -1,6 +1,5 @@
 <div class = "ordersPage">
     <h1> Orders </h1>
-    {{#if ordersValue}}
     <div class="form-group">
         <form action="/filter-order" method="POST">
             <div class="form-group">
@@ -18,20 +17,22 @@
         </form>
     </div>
     <div class = "orders"> 
+    {{#if ordersValue}}
+
         {{#each ordersValue}}
         <div id = "orderInfo">
-            <h3>Name: {{this.BuyerName}}</h3>
-            <p>Id: {{this.Id}}</p>
-            <p>Email:{{this.BuyerEmail}}</p>
-            <p>Address: {{this.BuyerAddress}}</p>
-            <p>Zip Code: {{this.BuyerZipCode}}</p>
-            <p>Send: {{this.IfSend}} (0 = Not Sent, 1 = Sent)</p>
-            {{#unless this.IfSend}}
+            <h3>Name: {{BuyerName}}</h3>
+            <p>Id: {{Id}}</p>
+            <p>Email:{{BuyerEmail}}</p>
+            <p>Address: {{BuyerAddress}}</p>
+            <p>Zip Code: {{BuyerZipCode}}</p>
+            <p>Send: {{IfSent}} (0 = Not Sent, 1 = Sent)</p>
+            {{#unless IfSent}}
             <p> The Product Has Not Been Shipped Yet :O</p>
-            <a href="send/orderId={{this.Id}}" class="btn" id="sendBtn"> Send Order</a>
+            <a href="/orders/sendOrder/{{Id}}" class="btn" id="sendBtn"> Send Order</a>
             {{else}}
             <p> The Product Has Already Been Shipped :D</p>
-            <a href="delete/orderId={{this.Id}}" class="btn" id="deleteBtn">Delete </a>
+            <a href="/orders/deleteOrder/{{Id}}" class="btn" id="deleteBtn">Delete </a>
             {{/unless}}
         </div>
         {{/each}}

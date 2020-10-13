@@ -17,7 +17,8 @@
     "path": "^0.12.7",
     "postman": "^0.2.0",
     "spectre.css": "^0.5.9",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^5.0.0",
+    "connect-sqlite3": "^0.9.11"
   },
   "devDependencies": {},
   "scripts": {

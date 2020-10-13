@@ -3,13 +3,13 @@
     <div class = "categorySetting">
         <h2> My Categories</h2>
         <ul id="categoriesList"> 
-        {{#if data}}
-            {{#each data}}
-            <li> {{this.Name}} -- <a href="/categories/editC/{{this.Id}}"> Edit </a> </li>
+        {{#if selectedCategories}}
+            {{#each selectedCategories}}
+            <li> {{this.Name}} <div> <a id="sendBtn" href="/categories/editC/{{this.Id}}"> Edit </a><a id="deleteBtn" href="categories/deleteC/{{this.Id}}"> &#10005 </a> </div></li>
             {{/each}}
         {{/if}}
             {{!-- <li> Cars </li> --}}
-        {{#unless data}}
+        {{#unless selectedCategories}}
             <li> No Categories Yet </li>
         {{/unless}}
         </ul>
@@ -30,24 +30,6 @@
                     <input class="form-input" type="text" name="name" placeholder="Ex: Car " required>
                     <br>
                     <button class="btn" id ="sendBtn"> Add </button>
-                </form>                
-            </div>
-        </div>
-        <div class="categorySetting"> 
-            <h2> Delete Category </h2>
-             {{#if errMSG}}
-            <ul>
-                {{#each errMSG}}
-                <p class="errorMSG"> {{this}} </p>
-                {{/each}}
-            </ul>
-            {{/if}}
-            <div class="form-group">
-                <form action="/delete-category" method="POST">
-                    <label class="form-label" for="name">Category name</label>
-                    <input class="form-input" type="text" name="name" placeholder="Ex: Car " required>
-                    <br>
-                    <button class="btn" id ="deleteBtn"> Delete </button>
                 </form>                
             </div>
         </div>

@@ -13,7 +13,7 @@
     <header>
         <div class="topnav" id="topNav">
             <div class="Menu">
-                <a class="active" href="/">Home</a>
+                <a class="active" href="/index?page=1">Home</a>
                 <a href="/about">About</a> 
                 <a href="/contact">Contact</a>
                 {{#if IndexPage}}
@@ -31,7 +31,7 @@
             {{#if SearchError}}
             <ul>
                 {{#each errorMSG}}
-                <p class="errorMSG"> {{this}} </p>
+                <li class="errorMSG"> {{this}} </li>
                 {{/each}}
             </ul>
             {{/if}}

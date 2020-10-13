@@ -1,28 +1,30 @@
 <div class = "postSection">
-    {{#if content}}
-        <img src="../{{content.Image}}" alt="img" class = "img-responsive" id="postIMG">
+    {{#if postContent}}
+        <img src="../{{postContent.Image}}" alt="img" class = "img-responsive" id="postIMG">
         <div id = "postDiv">
             <div class = "postInfo">
-                <h2><strong>Title: </strong> {{content.Title}} </h2>
-                <p><strong>Price: </strong>{{content.Price}} $</p>
-                <p><strong>Description: </strong> {{content.Description}}</p>
+                <h2><strong>Title: </strong> {{postContent.Title}} </h2>
+                <p><strong>Price: </strong>{{postContent.Price}} $</p>
+                <p><strong>Description: </strong> {{postContent.Description}}</p>
             </div>
           
 
         <div class="sellerSection"> 
             <h3>Seller Contact Information</h3>
             <div class= "sellerContact">
-                <p>By: Abdel Rahman Mallah  </p>
-                <p>Email: pickitngo@gmail.com </p>
-                <p>Phone Number: 07 29757160 </p>
+                <ul>
+                    <li>By: Abdel Rahman Mallah  </li>
+                    <li>Email: pickitngo@gmail.com </li>
+                    <li>Phone Number: 07 29757160 </li>
+                </ul>
             </div>
         </div>
         {{#if isLoggedIn}}
-        <a href ="/post/editP/{{content.Id}}" id="sendBtn"> Edit </a>
-        <a href ="/post/deleteP/{{content.Id}}" id="deleteBtn"> DELETE </a>
+        <a href ="/post/editP/{{postContent.Id}}" id="sendBtn"> Edit </a>
+        <a href ="/post/deleteP/{{postContent.Id}}" id="deleteBtn"> DELETE </a>
 
         {{else}}
-        <a href="/buy/{{content.Id}}" class="postBtn"> Order </a>
+        <a href="/order/{{postContent.Id}}" id="sendBtn"> Order </a>
         {{/if}}
     {{/if}}
     </div> 

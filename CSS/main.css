@@ -13,22 +13,32 @@ body {
   Color: #fff;
   background-color: #2196F3;
   border: solid 2px #0B1457;
+  text-decoration: none;
   border-radius: 2px;
+  padding: 5px;
+  text-align: center;
+  margin-bottom: 2px;
 }
 #deleteBtn {
   width: 100%;
   color: #fff;
   background-color: #BA2D0D;
   border: solid 2px #0B1457;
+  text-decoration: none;
   border-radius: 2px;
+  padding: 5px;
+  text-align: center;
+
 }
 #sendBtn:hover{
   color: #0B1457;
   background-color: #ddd;
+  text-decoration: none;
 }
 #deleteBtn:hover{
   color: #BA2D0D;
   background-color: #ddd;
+  text-decoration: none;
 }
 
 /* ========================== */
@@ -120,13 +130,14 @@ body {
   
 /* === Body Section === */
 .bodySection{
-  width: 100%;
+  width: 99%;
   min-height: 65%;
-  margin-top: 30px;
+  margin: 10px;
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
   align-content: flex-start;
+  margin-top: 30px;
 }
 /* === Lastest Posts  === */
 .LastestPosts{
@@ -230,7 +241,7 @@ body {
 }
 
 .categorySetting{
-  width: 40%;
+  width: 90%;
   text-align: center;
   margin: auto;
   margin-bottom: 20px;
@@ -238,29 +249,24 @@ body {
 #categoriesList{
   display: flex;
   flex-direction: row;
-  justify-content: center;
 }
 
 #categoriesList li{
   color: black;
+  width: 100%;
+  max-width: 300px;
   list-style-type: none;
-  margin-right: 10px;
-  border:solid 1px #0B1457;
+  border: solid 2px #0B1457;
   height: auto;
-  padding-left: 2px;
+  margin: 5px;
 }
-#categoriesList li a{
-  color: white;
-  text-decoration: none;
-  background-color: #0B1457;
-  padding:4px;
+#categoriesList li div{
+  float:right;
+  margin-right: 5px;
 }
-#categoriesList li a:hover{
-  color: #0B1457;
-  text-decoration: none;
-  background-color: #2196F3;
+#categoriesList li div a{
+  margin: 5px;
 }
-
 /* === Orders PAGE === */
 .ordersPage{
   display: flex;
@@ -369,6 +375,33 @@ body {
   padding: 0;
   color: black;
 }
+.pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 80%;
+  flex-wrap: wrap;
+}
+
+.pagination a {
+  color: #fff;
+  background-color: #0B1457;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  margin: 5px;
+}
+.pagination a:hover {
+  color: #0B1457;
+  background-color: #2196F3;
+}
+#prevPage{
+  float: left;
+}
+#nextPage{
+  float: right;
+}
+
 
 
 /* ==== Footer ==== */
@@ -418,6 +451,7 @@ body {
   color: #D1431B;
 }
 .FootSec a{
+  color: white;
   text-decoration: none;
 }
 .FootSec a:hover{
@@ -524,6 +558,10 @@ body {
   justify-content: space-between;
   flex-wrap: wrap;
 }
+.sellerContact ul li {
+  color: black
+}
+
 
 /* === Upload-Edit-Buy Pages === */
 .FormPages, #edit-form-group{
@@ -637,7 +675,7 @@ body {
     }
     #postImage{
       max-height: 550px;
-      height: 100;
+      height: 100%;
       max-width: 350px;
     }
     /* === Mobile Post Page === */
