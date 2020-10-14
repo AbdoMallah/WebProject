@@ -9,6 +9,7 @@ const path = require('path')
 const multer = require('multer')
 const moment = require('moment')
 const nodemailer = require('nodemailer')
+const csrf = require('csurf')
 const db = require('./db.js');
 const { callbackPromise } = require('nodemailer/lib/shared');
 
@@ -16,17 +17,22 @@ const { callbackPromise } = require('nodemailer/lib/shared');
 const app = express()
 const port = 8000
 /* === Admin === */
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'test123';
-
-async function hashIt(password){
-    const salt = await bcrypt.genSalt();
-    const hashed = await bcrypt.hash(password, salt);
-  }
-let hashed_PASS = hashIt(ADMIN_PASSWORD)
-let hashPass = hashed_PASS.toString();
+// bcrypt.hash(ADMIN_PASSWORD, salt, function(err, hash){
+//     if(!err){
+//         db.insertintoLogin('admin', hash, function(error){
+//             if(error){
+//                 console.log(error)
+//             }
+//             else{
+//                 console.log("test")
+//             }
+//         })
+//     }else{
+//         console.log('Error --> ' + err)   
+//     }
+// })
 async function compareIt(password, hashedPassword){
-    const validPassword = await bcrypt.compare(password, hashedPassword);
+    await bcrypt.compare(password, hashedPassword)
 }
 /* === Functions === */
 let last =  function(array, n) {
@@ -65,11 +71,17 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(session({
     saveUninitialized: false,
     resave: false,
-    secret: 'ujniasujnias'
+    secret: 'ujnersqkbpmas'
 }))
 app.use(function(req,res,next){
     const isLoggedIn = req.session.isLoggedIn
     res.locals.isLoggedIn = isLoggedIn
+    next()
+})
+
+app.use(csrf())
+app.use(function(req, res, next){
+    res.locals.csrfToken = req.csrfToken()
     next()
 })
 // SET STORAGE ENGINE 
@@ -86,28 +98,34 @@ const upload = multer({ storage: storage}).single('img');
 app.post('/login',(req, res ) => {
     const validationErr = [];
     const enteredUsername = req.body.username 
-    const enteredPassword = req.body.password  
-    if(enteredPassword.length < 6){
-        validationErr.push('To short password')
-    }
-    if(enteredUsername != ADMIN_USERNAME){
-        validationErr.push('Wrong Username');
-    }
-    if(enteredPassword != ADMIN_PASSWORD){
-        validationErr.push('Wrong Password');   
-    }
-    if(validationErr.length == 0){
-        if(compareIt(ADMIN_PASSWORD, hashPass)){
-            req.session.isLoggedIn = true;
-            res.redirect('/index?page=1')
-        }else{
-            console.log("The server could not compare the password with the hashed Password")
-        }
-        
-    }else{
-        const model = {validationErr}
-        res.render('login.hbs', model)
-    }
+    const enteredPassword = req.body.password
+    const csrf = req.body._csrf
+    if(csrf){
+        db.getLoginInfo(function(error, values) {
+            if(error){
+                res.send("Can't get login Info ERROR: --> " + error)
+            } else{
+                bcrypt.compare(enteredPassword, values.Password, function(error, result){
+                    if(error){
+                        res.sendStatus(401)
+                    }
+                    if(enteredUsername != values.Username){
+                        validationErr.push('Wrong Username');
+                    }
+                    if(!result){
+                        validationErr.push('Wrong Password')
+                    }
+                    if(validationErr.length == 0){
+                        req.session.isLoggedIn = true
+                        res.redirect('/')
+                    }else{
+                        const model = {validationErr}
+                        res.render('login.hbs', model)
+                    }
+                })        
+            }
+        })
+    } 
 })
 app.post('/logOut', (req, res) => {
     req.session.isLoggedIn = false;
@@ -118,16 +136,15 @@ app.post('/upload',(req, res) => {
     upload(req, res, (err) => {
         const Title = req.body.title
         const Description = req.body.description
-        const Price = parseInt(req.body.price)
+        const Price = parseInt(req.body.price) 
         const CategoryId = req.body.category
         const Filename = req.file.filename
-        const DefaultOrderId = 0;
+        const DefaultOrderId = 0; 
         if(errMSG.length == 0){
             if(!Title || !Price || !Filename || !CategoryId){errMSG.push('Fill the required field.')}
             if(typeof Price !== 'number' || Price < 0){ errMSG.push('Price Should Content A  Positiv Number')}
             if(typeof Title !== 'string'){errMSG.push('Title Should Content text, Numbers Only')}
             if(err){errMSG.push('The image has not been uploaded!');}       
-            const insertQuery = "INSERT INTO posts('Title', 'Description', 'Price', 'CategoryId','Image', 'Date', 'OrderId') VALUES (?,?,?,?,?,?,?)";
             db.uploadPost(Title, Description, Price, CategoryId, Filename, DefaultOrderId,function(error){
                 if(error){
                     res.send('The post has not been inserted to the database' + error)
@@ -139,7 +156,7 @@ app.post('/upload',(req, res) => {
             })
         }if(errMSG.length != 0){
             db.getAllData('categories', function(error, categoriesValue){
-                if(error){res.send(error)}
+                if(error){res.sendStatus(400)}
                 else{
                     const model= {categoriesValue, errMSG}
                     // res.send(Category)
@@ -297,7 +314,7 @@ app.get('/', (req, res) => {
 app.get('/index',(req, res) => {
     let IndexPage = true;
     const page = parseInt(req.query.page)
-    const limit =10;
+    const limit =5;
     const startIndex = (page - 1) * limit
     const endIndex = page * limit
     const results = {}
@@ -308,7 +325,6 @@ app.get('/index',(req, res) => {
         else{
             if(selectedPosts.length > limit){
                 for(let i = 1; i < ((selectedPosts.length + 2 ) % limit); i++){
-                    // console.log("i == --> " +i)
                     amountPages.push(i)
                 }
                 if(endIndex < selectedPosts.length){
@@ -343,7 +359,11 @@ app.get('/index',(req, res) => {
 app.get('/login', (req, res) => {
     if(req.session.isLoggedIn == true){
         res.redirect('/index?page=1')
-    }else{ res.render('login.hbs') }
+    }else{ 
+        // const csrfToken = Math.random();
+        // const model = {csrfToken}
+        res.render('login.hbs')
+     }
 })
 app.get('/contact', (req, res) => {
     res.render('contact.hbs')

@@ -1,6 +1,15 @@
+const { query } = require('express');
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database('database.db');
+const loginDb = new sqlite3.Database('loginDb.db')
 
+loginDb.run(`
+    CREATE TABLE IF NOT EXISTS loginTable(
+        Id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        Username TEXT NOT NULL,
+        Password TEXT NOT NULL
+    )
+`)
 db.run(`
     CREATE TABLE IF NOT EXISTS categories (
         Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,6 +43,24 @@ db.run(`
         IfSent INTEGER DEFAULT 0
     )`
 )
+
+exports.insertintoLogin = function(username ,password, callback){
+    const query = "INSERT INTO loginTable ('Username', 'Password') VALUES (? , ?)" 
+    const placeHolders = [username, password]  
+    loginDb.run(query, placeHolders, function(error){
+        callback(error)
+    })
+
+}
+
+exports.getLoginInfo = function(callback){
+    const query = "SELECT * FROM loginTable WHERE Id = ?"
+    const placeHolder = [1]
+    loginDb.get(query, placeHolder, function(error, values){
+        callback(error, values)
+    })
+
+}
 
 function enableForeignKey(){   
     db.run('PRAGMA foreign_keys = ON', function(error){
@@ -119,7 +146,7 @@ exports.deleteDataById = function(table, orderId, id, callback){
         placeHolder.push(id)
     }
     if(table == 'orders'){
-        query = 'DELETE FROM  orders WHERE Id = ? AND IfSend = 1'
+        query = 'DELETE FROM  orders WHERE Id = ? AND IfSent = 1'
         placeHolder.push(id)
     }
     db.get(query, placeHolder, function(error,postErrorMSG) {

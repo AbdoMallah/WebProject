@@ -23,7 +23,8 @@
                 <a  class = "AdminBtn" href="/categories">Categories</a>
                 <a  class = "AdminBtn" href="/orders">Orders</a>
 
-                <form action="/logOut" method="POST">  
+                <form action="/logOut" method="POST">
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
                     <button class="AdminBtn LogOutBtn">Logout</button>
                 </form> 
                 {{/if}}
