@@ -252,10 +252,10 @@ app.post('/contact', (req, res) => {
             if (error) {
             console.log(error);
             } else {
-            console.log('Email sent: ' + info.response);
-            thxMSG('Thx For sending your Question, I will try to answer as fast as I can :D')
-            const model = {thxMSG}
-            res.render('thxMessage.hbs', model)
+            // console.log('Email sent: ' + info.response);
+                thxMSG.push('Thx For sending your Question, I will try to answer as fast as I can :D')
+                const model = {thxMSG}
+                res.render('thxMessage.hbs', model)
             }
         });
     }else{

@@ -322,7 +322,7 @@ body {
 
 /* === Posts -- index page === */
 .posts{
-  width: 80%;
+  width: 90%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -334,9 +334,9 @@ body {
 .post{
   max-width: 250px;
   height: 100%;
-  max-height: 400px;
+  max-height: 380px;
   padding: 5px;
-  margin: 10px;
+  margin: 5px;
   border-style: solid;
   border-radius: 4px; 
   border-width: 2px;

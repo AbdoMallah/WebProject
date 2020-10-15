@@ -21,6 +21,7 @@
     "nodemailer": "^6.4.13",
     "path": "^0.12.7",
     "postman": "^0.2.0",
+    "python": "0.0.4",
     "spectre.css": "^0.5.9",
     "sqlite3": "^5.0.0"
   },
