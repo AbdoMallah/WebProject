@@ -4,18 +4,23 @@ const session = require('express-session')
 const cookieParser  = require('cookie-parser')
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt') //uses to hash password, don't need it in is Projekt. 
-const fs = require('fs')
 const path = require('path')
 const multer = require('multer')
 const moment = require('moment')
 const nodemailer = require('nodemailer')
 const csrf = require('csurf')
 const db = require('./db.js');
-const { callbackPromise } = require('nodemailer/lib/shared');
-
-
 const app = express()
 const port = 8000
+/* === https ===  */ 
+// const httpsOption ={
+//     cert: fs.readFileSync(path.join(__dirname,'server/ssl', 'server.crt')), 
+//     key: fs.readFileSync(path.join(__dirname, 'server/ssl', 'server.key'))
+// }
+
+// https.createServer(httpsOption, app).listen(port, function(){
+
+// })
 /* === Admin === */
 // bcrypt.hash(ADMIN_PASSWORD, salt, function(err, hash){
 //     if(!err){
@@ -31,9 +36,6 @@ const port = 8000
 //         console.log('Error --> ' + err)   
 //     }
 // })
-async function compareIt(password, hashedPassword){
-    await bcrypt.compare(password, hashedPassword)
-}
 /* === Functions === */
 let last =  function(array, n) {
     if (array == null) {return void 0;}

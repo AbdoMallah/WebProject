@@ -19,13 +19,19 @@
                 {{#if IndexPage}}
                 <a href="#footer" id="toFooter"> Footer </a>{{/if}}
                 {{#if isLoggedIn}}
-                <a  class = "AdminBtn" href="/upload">Upload</a>
-                <a  class = "AdminBtn" href="/categories">Categories</a>
-                <a  class = "AdminBtn" href="/orders">Orders</a>
-
+                 <div class="dropdown">
+                    <button class="dropbtn">Admin Settings 
+                     <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="/upload">Upload</a>
+                        <a href="/categories">Categories</a>
+                        <a href="/orders">Orders</a>
+                    </div>
+                </div>
                 <form action="/logOut" method="POST">
                     <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                    <button class="AdminBtn LogOutBtn">Logout</button>
+                    <button class="LogOutBtn">Logout</button>
                 </form> 
                 {{/if}}
             </div>
