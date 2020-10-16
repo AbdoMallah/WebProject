@@ -41,10 +41,10 @@
                 {{/each}}
             </ul>
             {{/if}}
-            {{#if IndexPage}}
+            {{#if showSearchBar}}
             <div class="search-container">
               <form action="/searching?" method="GET">
-                <input type="text" placeholder="Search.." name="search" required>
+                <input type="text" placeholder="Title Or Category " name="search" required>
                 <button id="searchBTN"type="submit"><i class="fa fa-search"></i></button>
               </form>
             </div>

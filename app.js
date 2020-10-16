@@ -373,7 +373,8 @@ app.get('/', (req, res) => {
     res.redirect('/index?page=1')
 }) 
 app.get('/index',(req, res) => {
-    let IndexPage = true;
+    let showSearchBar = true;
+    let IndexPage = true
     const page = parseInt(req.query.page)
     const limit =5;
     const startIndex = (page - 1) * limit
@@ -409,7 +410,7 @@ app.get('/index',(req, res) => {
             }
             results.postsResults = selectedPosts.slice(startIndex, endIndex)
             const model = {
-                results, limitData, IndexPage, nextPage, prevPage, amountPages
+                results, limitData, IndexPage,showSearchBar, nextPage, prevPage, amountPages
             }
             // res.send(values)
             // console.log(amountPages)
@@ -489,19 +490,23 @@ app.get('/post/deleteP/:Id', (req, res) => {
 })
 app.get('/searching?:search', (req, res) => {
     const searchTerm = '%'+req.query.search+'%' 
+    let showSearchBar =true; 
+    const amountPosts = []; 
     const SearchError = []  
     const errMSG = []
+    const clearedSeachTerm =  searchTerm.charAt(1).toUpperCase() + searchTerm.slice('2', '-1')
     if(searchTerm !== ''){
         db.searchFor(searchTerm,function(error, searchedPost){
             if(error){
                 res.send(error + ' Server error, could not select data from the database')
             }
             if(searchedPost.length == 0){
-                SearchError.push('There are no content with this Title: '+searchTerm.slice('1','-1')+' OR Category: '+searchTerm.slice('1','-1'))
-                const model = {SearchError}
+                SearchError.push('There are no content with this Title: '+clearedSeachTerm+' OR Category: '+clearedSeachTerm)
+                const model = {SearchError, showSearchBar}
                 res.render('searched.hbs', model)
             }else{
-                const model = {searchedPost}
+                amountPosts.push((searchedPost.length))
+                const model = {searchedPost, showSearchBar, amountPosts, clearedSeachTerm}
                 res.render('searched.hbs', model)
             }
         })

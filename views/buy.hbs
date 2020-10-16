@@ -1,4 +1,13 @@
 <div class = "FormPages">
+    <h2> Order Page</h2>
+    {{#if selectedPost}}
+    <div class="postOnBuyPage">
+        <img src="../{{selectedPost.Image}}" class="img-responsive">
+        <div> 
+            <h3>Post Tilte: {{selectedPost.Title}}</h3>
+            <h3>Item Price: {{selectedPost.Price}}</h3>
+        </div> 
+    </div>
     <div id = "FormPagesBody"> 
         {{#if errMSG}}
         <ul> 
@@ -7,26 +16,26 @@
             {{/each}}
         </ul>            
         {{/if}}
-        <h2> Order Page</h2>
-        {{#if selectedPost}}
-        <div class="form-group">
-            <form action="/order/post={{selectedPost.Id}}" method="POST">
-                <label class="form-label" for="name">Name</label>
-                <input class="form-input" type="text" name="name" placeholder="Ex: John Cena " required>
-                <br>
-                 <label class="form-label" for="email">Email</label>
-                <input class="form-input" type="text" name="email" placeholder="Ex:example@example.com " required>
-                <br>
-                <label class="form-label" for="address">Address</label>
-                <input class="form-input" type="text" name="address" placeholder="Östra Standgatan 50A">
-                <br>
-                <label class="form-label" for="zipCode">ZIP Code</label>
-                <input class="form-input" type="number" name="zipCode" placeholder="Ex: 123456" required>
-                <br><hr>
-                <input type="hidden" name="token" value="{{token}}">
-                <button class = "btn" id ="sendBtn"> Buy </button>
-            </form>                
-        </div>
+        <hr>
+        <h2> Your Infomation </h2> 
+            <div class="form-group">
+                <form action="/order/post={{selectedPost.Id}}" method="POST">
+                    <label class="form-label" for="name">Your Name</label>
+                    <input class="form-input" type="text" name="name" placeholder="Ex: John Cena " required>
+                    <br>
+                    <label class="form-label" for="email">Your Email</label>
+                    <input class="form-input" type="text" name="email" placeholder="Ex:example@example.com " required>
+                    <br>
+                    <label class="form-label" for="address">Your Address</label>
+                    <input class="form-input" type="text" name="address" placeholder="Östra Standgatan 50A">
+                    <br>
+                    <label class="form-label" for="zipCode">ZIP Code</label>
+                    <input class="form-input" type="number" name="zipCode" placeholder="Ex: 123456" required>
+                    <br><hr>
+                    <input type="hidden" name="token" value="{{token}}">
+                    <button class = "btn" id ="sendBtn"> Buy </button>
+                </form>                
+            </div>
         {{/if}}
     </div>
 </div>

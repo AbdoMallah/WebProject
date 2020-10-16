@@ -164,7 +164,16 @@ body {
   justify-content: space-around;
   align-items: flex-start;
   align-content: flex-start;
-  margin-top: 30px;
+}
+.searchBodySection{
+  width: 99%;
+  min-height: 65%;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  align-content: flex-start;
 }
 /* === Lastest Posts  === */
 .LastestPosts{
@@ -435,7 +444,20 @@ body {
   float: right;
 }
 
+/* === Buy Page === */
+.postOnBuyPage{
+  border: solid 2px #0B1457;
+  border-radius: 4px;
+  height:auto;
+  max-width:100%;
+}
+.postOnBuyPage img{
+  border-bottom: solid 2px #2196F3;
+  border-radius: 4px;
+}
+.postOnBuyPage div{
 
+}
 
 /* ==== Footer ==== */
 .footer{
