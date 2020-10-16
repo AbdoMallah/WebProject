@@ -21,8 +21,10 @@
         </div>
         {{#if isLoggedIn}}
         <a href ="/post/editP/{{postContent.Id}}" id="sendBtn"> Edit </a>
-        <a href ="/post/deleteP/{{postContent.Id}}" id="deleteBtn"> DELETE </a>
-
+        <form  action="/post/deleteP/{{postContent.Id}}" method="POST">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button id="deleteBtn"> DELETE </button>
+        </form>
         {{else}}
         <a href="/order/{{postContent.Id}}" id="sendBtn"> Order </a>
         {{/if}}

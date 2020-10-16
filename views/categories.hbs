@@ -5,16 +5,7 @@
         <ul id="categoriesList"> 
         {{#if selectedCategories}}
             {{#each selectedCategories}}
-            <li>
-                
-                 {{this.Name}} 
-                <div> 
-                    <a id="sendBtn" href="/categories/editC/{{this.Id}}"> Edit </a>
-                    <form action="/deleteC/categoryId={{this.Id}}" method="POST" >
-                        <button id ="deleteBtn"> Delete </button>
-                    </form>
-                </div>
-            </li>
+            <li>{{this.Name}}<a id="sendBtn" href="/categories/editC/{{this.Id}}"> Edit </a></li>
             {{/each}}
         {{/if}}
             {{!-- <li> Cars </li> --}}
@@ -25,22 +16,30 @@
     </div>
     <div id="categoriesSettings">
         <div class="categorySetting"> 
-            <h2> Add Category </h2>
             {{#if errMSG}}
             <ul>
                 {{#each errMSG}}
-                <p class="errorMSG"> {{this}} </p>
+                <li class="errorMSG"> {{this}} </li>
                 {{/each}}
             </ul>
             {{/if}}
             <div class="form-group">
                 <form action="/add-category" method="POST">
+                    <h3> Add Category </h3>
                     <label class="form-label" for="name">Category name</label>
                     <input class="form-input" type="text" name="name" placeholder="Ex: Car " required>
                     <br>
-                    <input type="hidden" name="token" value="{{token}}">
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
                     <button class="btn" id ="sendBtn"> Add </button>
-                </form>                
+                </form>
+                <form action="/deleteC" method="POST">
+                    <h3> Delete Category </h3>
+                    <label class="form-label" for="name">Category name</label>
+                    <input class="form-input" type="text" name="name" placeholder="Ex: Car " required>
+                    <br>
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                    <button id ="deleteBtn"> Delete </button>
+                </form>              
             </div>
         </div>
     </div>

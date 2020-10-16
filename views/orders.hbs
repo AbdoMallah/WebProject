@@ -12,6 +12,7 @@
             <label class="form-radio form-inline">
                 <input type="radio" name="sent" checked="" value="showAll"><i class="form-icon"></i> Show All
             </label>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
             <button type="submit"> Filter </button>
             </div> 
         </form>
@@ -21,26 +22,27 @@
         {{#each ordersValue}}
         <div id = "orderInfo">
             <h3>Name: {{BuyerName}}</h3>
-            <p>Id: {{Id}}</p>
             <p>Email:{{BuyerEmail}}</p>
             <p>Address: {{BuyerAddress}}</p>
             <p>Zip Code: {{BuyerZipCode}}</p>
-            <p>Send: {{IfSent}} (0 = Not Sent, 1 = Sent)</p>
-            {{#unless IfSent}}
-            <p> The Product Has Not Been Shipped Yet :O</p>
-            <form method="POST" action="/orders/sendOrder/{{Id}}">
-                <button class="btn" id ="sendBtn"> Send Order </button>
+            <p>Post Id: {{Id}}</p>
+            {{#if IfSent}}
+            <p> The Product Has Already Been Shipped :D</p>
+            <form  action="deleteOrder/{{Id}}" method="POST">
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button id="deleteBtn"> Delete </button>
             </form>
             {{else}}
-            <p> The Product Has Already Been Shipped :D</p>
-            <form method="POST" action="/orders/deleteOrder/{{Id}}">
-                <button id ="deleteBtn"> Delete </button>
+            <p> The Product Has Not Been Shipped Yet :O</p>
+            <form  action="sendOrder/{{Id}}" method="POST">
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button id="sendBtn"> Send Order </button>
             </form>
-            {{/unless}}
+            {{/if}}
         </div>
         {{/each}}
     </div>
     {{else}}
-        <p> No Orders Yet Or All The Orders have been Sent</p>
+        <p> No Orders Yet</p>
     {{/if}}
 </div>

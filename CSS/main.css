@@ -282,16 +282,20 @@ body {
   margin: auto;
   margin-bottom: 20px;
 }
+.categorySetting div{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.categorySetting div form{
+  width: 40%;
+}
 #categoriesList{
   display: flex;
   flex-direction: row;
+  justify-content: center;
   width: 100%;
   margin: auto;
-}
-#categoriesList li div{
-  display: flex;
-  flex-direction: row;
-  width: 40%;
 }
 #categoriesList li{
   color: black;
@@ -302,13 +306,12 @@ body {
   height: auto;
   margin: 5px;
 }
-#categoriesList li div{
+#categoriesList li a{
   float:right;
-  margin-right: 5px;
-}
-#categoriesList li div a, #categoriesList li div form{
+  width: 20%;
   margin: 2px;
 }
+
 /* === Orders PAGE === */
 .ordersPage{
   display: flex;
@@ -331,8 +334,8 @@ body {
   margin: 10px;
   padding: 2px;
   width: 500px;
-  height: 400px;
-  max-height:400px;  
+  height: auto;
+  max-height:350px;  
 }
 
 /* === Posts -- index page === */
@@ -453,10 +456,6 @@ body {
 }
 .postOnBuyPage img{
   border-bottom: solid 2px #2196F3;
-  border-radius: 4px;
-}
-.postOnBuyPage div{
-
 }
 
 /* ==== Footer ==== */
@@ -530,9 +529,16 @@ body {
   margin: auto;
   margin-top:50px;
 }
-
+#contactForm p{ 
+  font-size: 18px;
+}
+#contactForm p span{ 
+  font-size: 20px;
+  font-weight: bold;
+}
 #ContactTitle span{
   color: #ED1457;
+  font-weight: bold;
 
 }
  /* === Thx Message Page === */
@@ -623,7 +629,6 @@ body {
   max-width: 500px;
   min-height: 100%;
   margin: auto;
-  margin-top:50px;
 } 
 
 .FormPagesHeader{

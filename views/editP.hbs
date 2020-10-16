@@ -25,7 +25,7 @@
             <option value="{{Id}}">{{Name}}</option>
             {{/each}}
         </select>
-        <input type="hidden" name="token" value="{{token}}">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <br><hr>
         <button class = "btn" id ="sendBtn"> Edit </button>
     </form> 

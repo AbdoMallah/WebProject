@@ -8,18 +8,37 @@ const path = require('path')
 const multer = require('multer')
 const moment = require('moment')
 const nodemailer = require('nodemailer')
+const csrf = require('csurf')
 const db = require('./db.js');
 const app = express()
 const port = 8000
-/* === https ===  */ 
-// const httpsOption ={
-//     cert: fs.readFileSync(path.join(__dirname,'server/ssl', 'server.crt')), 
-//     key: fs.readFileSync(path.join(__dirname, 'server/ssl', 'server.key'))
-// }
+/* === MiddleWares === */
+app.use(express.static('node_modules/spectre.css/dist'))
+app.use(express.static('CSS'))
+app.use(express.static('views/images'))
+app.use(express.static('views'))
+app.use(express.static('views/post'))
+app.use(express.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({extended: true}))
+/* === SESSION === */
+app.use(session({
+    saveUninitialized: false,
+    resave: false,
+    secret: 'ujnersqkbpmas'
+}))
+app.use(function(req,res,next){
+    const isLoggedIn = req.session.isLoggedIn
+    res.locals.isLoggedIn = isLoggedIn
+    next()
+})
+/*=== CSRF === */
+app.use(csrf())
+app.use(function(req, res, next) {
+    res.locals.csrfToken = req.csrfToken()
+    next()
+})
 
-// https.createServer(httpsOption, app).listen(port, function(){
 
-// })
 /* === Admin === */
 // bcrypt.hash(ADMIN_PASSWORD, salt, function(err, hash){
 //     if(!err){
@@ -59,25 +78,9 @@ app.engine('hbs', expresshandlebars({
     defaultLayout: 'main.hbs',
     layoutsDir: __dirname + '/views/layouts/'
 })) 
-app.use(express.static('node_modules/spectre.css/dist'))
-app.use(express.static('CSS'))
-app.use(express.static('views/images'))
-app.use(express.static('views'))
-app.use(express.static('views/post'))
-app.use(express.urlencoded({extended: false}))
-app.use(bodyParser.urlencoded({extended: true}))
 
-/* === SESSION === */
-app.use(session({
-    saveUninitialized: false,
-    resave: false,
-    secret: 'ujnersqkbpmas'
-}))
-app.use(function(req,res,next){
-    const isLoggedIn = req.session.isLoggedIn
-    res.locals.isLoggedIn = isLoggedIn
-    next()
-})
+
+
 /* === SET STORAGE ENGINE  === */ 
 
 const storage = multer.diskStorage({
@@ -98,35 +101,30 @@ app.post('/login',(req, res ) => {
     const enteredUsername = req.body.username 
     const enteredPassword = req.body.password
     const token = req.body.token
-    // console.log("Token: --> "+token)
-    if(token){
-        db.getLoginInfo(function(error, values) {
-            if(error){
-                res.send("Can't get login Info ERROR: --> " + error)
-            } else{
-                bcrypt.compare(enteredPassword, values.Password, function(error, result){
-                    if(error){
-                        res.sendStatus(401)
-                    }
-                    if(enteredUsername != values.Username){
-                        validationErr.push('Wrong Username');
-                    }
-                    if(!result){
-                        validationErr.push('Wrong Password')
-                    }
-                    if(validationErr.length == 0){
-                        req.session.isLoggedIn = true
-                        res.redirect('/')
-                    }else{
-                        const model = {validationErr, token}
-                        res.render('login.hbs', model)
-                    }
-                })        
-            }
-        })
-    }else{
-        res.sendStatus(403)
-    }
+    db.getLoginInfo(function(error, values) {
+        if(error){
+            res.send("Can't get login Info ERROR: --> " + error)
+        } else{
+            bcrypt.compare(enteredPassword, values.Password, function(error, result){
+                if(error){
+                    res.sendStatus(401)
+                }
+                if(enteredUsername != values.Username){
+                    validationErr.push('Wrong Username');
+                }
+                if(!result){
+                    validationErr.push('Wrong Password')
+                }
+                if(validationErr.length == 0){
+                    req.session.isLoggedIn = true
+                    res.redirect('/')
+                }else{
+                    const model = {validationErr, token}
+                    res.render('login.hbs', model)
+                }
+            })        
+        }
+    })
 })
 app.post('/logOut', (req, res) => {
     req.session.isLoggedIn = false;
@@ -174,30 +172,43 @@ app.post('/editP/post=:Id', (req, res) => {
     const description = req.body.description
     const price = req.body.price
     const category = req.body.category
-    const token = req.body.token
     const emptyFieldError = [];
-    if(token){
-        if(!title || !description || !price || !category){
-            emptyFieldError.push('You can not update a post with empty fields')
-        }
-        else{
-            db.updatePost(title, description, price, category, id,function(error){
-                if(!error){
-                    res.redirect('/post/'+id)
-                }else{
-                    res.send(error)
-                }
+    if(!title || !description || !price || !category){
+        emptyFieldError.push('You can not update a post with empty fields')
+    }
+    else{
+        db.updatePost(title, description, price, category, id,function(error){
+            if(!error){
+                res.redirect('/post/'+id)
+            }else{
+                res.send(error)
+            }
 
-            })
-        }
+        })
+    }
+})
+app.post('/post/deleteP/:Id', (req, res) => {
+    const postId = req.params.Id
+    if(req.session.isLoggedIn){
+        db.deleteDataById('posts', 0,postId, (error, postErrorMSG) => {
+            if(!error){
+                console.log('Post With Id: '+ postId +' Has Been Deleted, :D ')
+                res.redirect('/index?page=1')
+            }else if(postErrorMSG){
+                res.send(postErrorMSG)
+            }else{
+                res.send('Delete ERROR --> ' + error)
+            }
+        })
+    }else{
+        res.redirect('/login')
     }
 })
 app.post('/add-category', (req, res) => {
     const enteredName = req.body.name
     const Value = [enteredName]
     const errMSG = []
-    const token = req.body.token
-    if(token){
+    if(req.session.isLoggedIn){
         if(Value != 0){
             db.createcategory(enteredName, function(error){
                 if(error){
@@ -218,14 +229,15 @@ app.post('/add-category', (req, res) => {
             }
             res.render('categories.hbs', model)
         }
+    }else{
+        res.redirect('/login')
     }
 })
 app.post('/editC/categoryId=:Id', (req, res) => {
     const id = req.params.Id
     const name = req.body.name
-    const token = req.body.token
     const emptyFieldError = [];
-    if(token){
+    if(req.session.isLoggedIn){
         if(!name ){
             emptyFieldError.push('You can not update category name with empty fields')
         }
@@ -240,31 +252,37 @@ app.post('/editC/categoryId=:Id', (req, res) => {
                 }
             })
         }
+    }else{
+        res.redirect('login')
     }
 })
-app.post('/deleteC/categoryId=:Id', (req, res) => {
-    const Id = req.params.Id
+app.post('/deleteC', (req, res) => {
+    const cName = req.body.name
     const errMSG = []
-    if(Id){
-        db.deleteDataById('categories',0,Id, function(error) {
-            if(error){
-                res.send('The category with Id: '+Id+' has not been deleted from the database')
-            }
-            else{
-                console.log('The category with Id: '+Id+' has been deleted from the database');
-                
-            }
-        })
-    }
-    else{ 
-        errMSG.push('You can not delete a category with empty field')
-    } 
-    if(errMSG.length == 0){
-        res.redirect('/categories');
-    }else{
-        const model = {errMSG}
-        res.render('/categories.hbs', model)
+    if(req.session.isLoggedIn){
+        if(cName){
+            db.deleteCategoryByName(cName, function(error) {
+                if(error){
+                    res.send('The category with Name: '+cName+' has not been deleted from the database')
+                }
+                else{
+                    console.log('The category with Name: '+cName+' has been deleted from the database');
+                    
+                }
+            })
+        }
+        else{ 
+            errMSG.push('You can not delete a category with empty field')
+        } 
+        if(errMSG.length == 0){
+            res.redirect('/categories');
+        }else{
+            const model = {errMSG}
+            res.render('/categories.hbs', model)
 
+        }
+    }else{
+        res.redirect('login')
     }
 })
 app.post('/contact', (req, res) => {
@@ -304,60 +322,63 @@ app.post('/order/post=:Id', (req, res) => {
     const buyerEmail = req.body.email
     const buyerAddress = req.body.address
     const buyerZipCode = req.body.zipCode
-    const token = req.body.token
     const errMSG = []
-    if(token){
-        if(!buyerName|| !buyerEmail|| !buyerAddress || !buyerZipCode){
-            errMSG.push('You can buy without filling the fields')
-            const model = {errMSG}
-            res.render('buy.hbs/'+postId, model)
-        }else{
-            db.makeOrder(postId,buyerName, buyerEmail, buyerAddress, buyerZipCode,function(error, thxMSG){
-                if(error){
-                    res.send('We have an error to complete your order, plz try again later')
-                }else{
-                    const model = {thxMSG}
-                    res.render('thxMessage.hbs', model)
-                }
-            })
-        }
+    if(!buyerName|| !buyerEmail|| !buyerAddress || !buyerZipCode){
+        errMSG.push('You can buy without filling the fields')
+        const model = {errMSG}
+        res.render('buy.hbs/'+postId, model)
+    }else{
+        db.makeOrder(postId,buyerName, buyerEmail, buyerAddress, buyerZipCode,function(error, thxMSG){
+            if(error){
+                res.send('We have an error to complete your order, plz try again later')
+            }else{
+                const model = {thxMSG}
+                res.render('thxMessage.hbs', model)
+            }
+        })
     }
 })
 app.post('/filter-order', (req, res) => {
     const ifSent = req.body.sent
     const changeSentValue = []
-    if(ifSent == 'sent'){
-        changeSentValue.push(1)
-    }
-    if(ifSent == 'unsent') {
-        changeSentValue.push(0)
-    }
-    if(ifSent == 'showAll'){
-        res.redirect('/orders')
-    }
-    db.filterOrders(changeSentValue, (error, ordersValue) => {
-        if(!error){
-            const model = {ordersValue}
-            res.render('orders.hbs', model)
-        }else{
-            res.send('Can not get order Value, ERROR --> '+ error)
+    if(req.session.isLoggedIn){
+        if(ifSent == 'sent'){
+            changeSentValue.push(1)
         }
-    })
+        if(ifSent == 'unsent') {
+            changeSentValue.push(0)
+        }
+        if(ifSent == 'showAll'){
+            res.redirect('/orders')
+        }
+        db.filterOrders(changeSentValue, (error, ordersValue) => {
+            if(!error){
+                const model = {ordersValue}
+                res.render('orders.hbs', model)
+            }else{
+                res.send('Can not get order Value, ERROR --> '+ error)
+            }
+        })
+    }
 })
 
-app.post('/orders/deleteOrder/:Id', (req, res) => {
+app.post('deleteOrder/:Id', (req, res) => {
     const id = req.params.Id
-    db.deleteDataById('orders',1,id,function(error){
-        if(!error){
-            res.redirect('/orders')
-        }else{
-            res.send('Order with id = ' + id + ' has not been deleted , ERROR --> ' + error)
-        }
-    })
-})
-app.post('/orders/sendOrder/:Id', (req, res) => {
     if(req.session.isLoggedIn){
-        const id = req.params.Id
+        db.deleteDataById('orders',1,id,function(error){
+            if(!error){
+                res.redirect('/orders')
+            }else{
+                res.send('Order with id = ' + id + ' has not been deleted , ERROR --> ' + error)
+            }
+        })
+    }else{
+        res.redirect('/login')
+    }
+})
+app.post('sendOrder/:Id', (req, res) => {
+    const id = req.params.Id
+    if(req.session.isLoggedIn){
         db.updateOrderIfSentValue(id, function(error){
             if(!error){
                 res.redirect('/orders')
@@ -365,6 +386,8 @@ app.post('/orders/sendOrder/:Id', (req, res) => {
                 res.send('Database table orders has not been updated, ERROR --> ' + error)
             }
         })
+    }else{
+        res.redirect('/login')
     }
     
 })
@@ -474,20 +497,7 @@ app.get('/post/editP/:Id', (req, res) => {
         })
     }else{res.redirect('/login')}
 })
-app.get('/post/deleteP/:Id', (req, res) => {
-    const postId = req.params.Id
-    db.deleteDataById('posts', 0,postId, (error, postErrorMSG) => {
-        if(!error){
-            console.log('Post With Id: '+ postId +' Has Been Deleted, :D ')
-            res.redirect('/index?page=1')
-        }else if(postErrorMSG){
-            res.send(postErrorMSG)
-        }else{
-            res.send('Delete ERROR --> ' + error)
 
-        }
-    })
-})
 app.get('/searching?:search', (req, res) => {
     const searchTerm = '%'+req.query.search+'%' 
     let showSearchBar =true; 
@@ -552,10 +562,9 @@ app.get('/thxMessage', (req, res) => {
 })
 app.get('/order/:Id', (req, res) => {
     const postId = req.params.Id
-    const token = Math.random()
     db.getDataById('posts', postId, function(error, selectedPost){
         if(!error){
-            const model = {selectedPost, token} 
+            const model = {selectedPost} 
             res.render('buy.hbs', model)
         }else(
             res.send(error)
@@ -577,10 +586,6 @@ app.get('/orders', (req, res) => {
         res.redirect('/login')
     }
 })
- 
-  
-
-
 app.listen(port)
 
 /* Before Pagination */

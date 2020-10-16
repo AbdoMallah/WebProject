@@ -141,16 +141,19 @@ exports.deleteDataById = function(table, orderId, id, callback){
     }else if(table == 'posts' && orderId != 0){
         postErrorMSG.push('You can not delete a post that have an order')
     }
-    if(table == 'categories'){
-        query = 'DELETE FROM categories WHERE Id = ?'
-        placeHolder.push(id)
-    }
     if(table == 'orders'){
         query = 'DELETE FROM  orders WHERE Id = ? AND IfSent = 1'
         placeHolder.push(id)
     }
     db.get(query, placeHolder, function(error,postErrorMSG) {
         callback(error, postErrorMSG)
+    })
+}
+exports.deleteCategoryByName= function(name,callback){
+    const query = 'DELETE FROM categories WHERE Name = ?'
+    const placeHolder = [name]
+    db.run(query, placeHolder, function(error){
+        callback(error)
     })
 }
 exports.updatePost = function(title, description, price, category,id, callback){
