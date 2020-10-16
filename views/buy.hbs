@@ -23,7 +23,8 @@
                 <label class="form-label" for="zipCode">ZIP Code</label>
                 <input class="form-input" type="number" name="zipCode" placeholder="Ex: 123456" required>
                 <br><hr>
-            <button class = "btn" id ="sendBtn"> Buy </button>
+                <input type="hidden" name="token" value="{{token}}">
+                <button class = "btn" id ="sendBtn"> Buy </button>
             </form>                
         </div>
         {{/if}}

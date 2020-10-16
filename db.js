@@ -156,7 +156,7 @@ exports.deleteDataById = function(table, orderId, id, callback){
 exports.updatePost = function(title, description, price, category,id, callback){
     const query = 'UPDATE posts SET Title = ?, Description = ?, Price = ?, CategoryId = ? WHERE Id = ?'
     const updatedValues = [title, description, price, category, id]
-    db.run(updateQuery, updatedValues, (error)=> {
+    db.run(query, updatedValues, (error)=> {
         callback(error)
     })
 

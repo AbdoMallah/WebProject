@@ -268,7 +268,7 @@ body {
 }
 
 .categorySetting{
-  width: 90%;
+  width: 95%;
   text-align: center;
   margin: auto;
   margin-bottom: 20px;
@@ -276,12 +276,18 @@ body {
 #categoriesList{
   display: flex;
   flex-direction: row;
+  width: 100%;
+  margin: auto;
 }
-
+#categoriesList li div{
+  display: flex;
+  flex-direction: row;
+  width: 40%;
+}
 #categoriesList li{
   color: black;
   width: 100%;
-  max-width: 300px;
+  max-width: 500px;
   list-style-type: none;
   border: solid 2px #0B1457;
   height: auto;
@@ -291,8 +297,8 @@ body {
   float:right;
   margin-right: 5px;
 }
-#categoriesList li div a{
-  margin: 5px;
+#categoriesList li div a, #categoriesList li div form{
+  margin: 2px;
 }
 /* === Orders PAGE === */
 .ordersPage{

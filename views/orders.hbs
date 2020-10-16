@@ -18,7 +18,6 @@
     </div>
     <div class = "orders"> 
     {{#if ordersValue}}
-
         {{#each ordersValue}}
         <div id = "orderInfo">
             <h3>Name: {{BuyerName}}</h3>
@@ -29,15 +28,19 @@
             <p>Send: {{IfSent}} (0 = Not Sent, 1 = Sent)</p>
             {{#unless IfSent}}
             <p> The Product Has Not Been Shipped Yet :O</p>
-            <a href="/orders/sendOrder/{{Id}}" class="btn" id="sendBtn"> Send Order</a>
+            <form method="POST" action="/orders/sendOrder/{{Id}}">
+                <button class="btn" id ="sendBtn"> Send Order </button>
+            </form>
             {{else}}
             <p> The Product Has Already Been Shipped :D</p>
-            <a href="/orders/deleteOrder/{{Id}}" class="btn" id="deleteBtn">Delete </a>
+            <form method="POST" action="/orders/deleteOrder/{{Id}}">
+                <button id ="deleteBtn"> Delete </button>
+            </form>
             {{/unless}}
         </div>
         {{/each}}
     </div>
     {{else}}
-        <p> No Orders Yet </p>
+        <p> No Orders Yet Or All The Orders have been Sent</p>
     {{/if}}
 </div>

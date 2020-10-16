@@ -1,7 +1,7 @@
 <div class = "FormPages">
         <div class="FormPagesHeader">
             <h3>Upload A New Post </h3>
-            <p id="arrowDown"> &#10095 </p>
+            <p id="arrowDown"> &#10095; </p>
         </div>
         <div id = "FormPagesBody"> 
             {{#if errMSG}}
@@ -13,7 +13,6 @@
             {{/if}}
             <div class="form-group">
                 <form action="/upload" method="POST" enctype="multipart/form-data">
-                 
                     <label class="form-label" for="img">Select image:</label>
                     <input class="form-input" type="file" id="img" name="img" required>
                     <br>
@@ -33,7 +32,7 @@
                         {{/each}}
                     </select>
                     <br><hr>
-                    <button class = "btn" id="sendBtn"> Upload </button>
+                    <button class="btn" id="sendBtn"> Upload </button>
                 </form>                
             </div>
         </div>

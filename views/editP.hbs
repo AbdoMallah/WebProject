@@ -10,21 +10,22 @@
     {{#if selectedPost}}
     <form action="/editP/post={{selectedPost.Id}}" method="POST">
 
-            <label class="form-label" for="title">Title</label>
-            <input class="form-input" type="text" name="title" placeholder="Ex: Bmw " value="{{selectedPost.Title}}" required>
-            <br>
-            <label class="form-label" for="description">Description</label>
-            <textarea class="form-input" type="text" name="description">{{selectedPost.Description}}</textarea>
-            <br>
-            <label class="form-label" for="price">Price</label>
-            <input class="form-input" type="number" name="price" placeholder="Ex: 800$" value="{{selectedPost.Price}}" required>
-            <br>
-            <label class="form-label" for="category"> Category</label>
-            <select class="form-select" name="category">
-                {{#each selectedCategories}}
-                <option value="{{Id}}">{{Name}}</option>
-                {{/each}}
-            </select>
+        <label class="form-label" for="title">Title</label>
+        <input class="form-input" type="text" name="title" placeholder="Ex: Bmw " value="{{selectedPost.Title}}" required>
+        <br>
+        <label class="form-label" for="description">Description</label>
+        <textarea class="form-input" type="text" name="description">{{selectedPost.Description}}</textarea>
+        <br>
+        <label class="form-label" for="price">Price</label>
+        <input class="form-input" type="number" name="price" placeholder="Ex: 800$" value="{{selectedPost.Price}}" required>
+        <br>
+        <label class="form-label" for="category"> Category</label>
+        <select class="form-select" name="category">
+            {{#each selectedCategories}}
+            <option value="{{Id}}">{{Name}}</option>
+            {{/each}}
+        </select>
+        <input type="hidden" name="token" value="{{token}}">
         <br><hr>
         <button class = "btn" id ="sendBtn"> Edit </button>
     </form> 

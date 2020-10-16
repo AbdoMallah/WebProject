@@ -10,7 +10,8 @@
     {{#if selectedCategory}}
     <form action="/editC/categoryId={{selectedCategory.Id}}" method="POST">
         <label class="form-label" for="name">Category Name</label>
-        <input class="form-input" type="text" name="name" placeholder="Ex: car " value="{{selectedCategory.Name}}" required>
+        <input class="form-input" type="text" name="name" value="{{selectedCategory.Name}}" required>
+        <input type="hidden" name="token" value="{{token}}">
         <br>
         <br><hr>
         <button class = "btn" id ="sendBtn"> Edit </button>
