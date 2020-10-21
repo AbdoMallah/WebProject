@@ -165,6 +165,9 @@ body {
   align-items: flex-start;
   align-content: flex-start;
 }
+.bodySection div{
+  width: 95%;
+}
 .searchBodySection{
   width: 99%;
   min-height: 65%;
@@ -267,6 +270,9 @@ body {
 #categoriesPage h1{
   text-align: center;
 }
+#categoriesPage  p{
+  text-align: center;
+}
 #categoriesSettings{
   display: flex;
   flex-direction: row;
@@ -340,7 +346,7 @@ body {
 
 /* === Posts -- index page === */
 .posts{
-  width: 90%;
+  width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -463,6 +469,7 @@ body {
   height: 200px;
   max-height: 300px;
   background-color: #0B1457;
+  width: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center; 
@@ -712,10 +719,10 @@ body {
 
     /* === Mobile Posts Section === */
     .posts{
-      margin: auto;
       max-width: 90%;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -727,17 +734,8 @@ body {
         width: 100%;
         min-width: 250px;
         max-width: 500px;
-        max-height: 500px;
-        padding: 5px;
-        border-style: solid;
-        border-radius: 4px; 
-        border-width: 2px;
-        border-color: #0B1457;
-        background-color: #fff;
-        display: flex; 
-        flex-direction: column;
-        justify-content: space-between;
-        margin: auto;   
+        height: 550px;
+        padding: 5px;   
     }
     .LastestPosts{
       display: none;
@@ -745,10 +743,12 @@ body {
     #postInfo{
       width: 100%;
       max-width: 350px;
+      height: 50%;
+
     }
     #postImage{
       max-height: 550px;
-      height: 100%;
+      height: 50%;
       max-width: 350px;
     }
     /* === Mobile Post Page === */
@@ -774,6 +774,23 @@ body {
     .categorySetting{
       width: 95%;
     }
+    .categorySetting div{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .categorySetting div form{
+      width: 100%;
+    }
+    /* === Mobile About Page === */
+    .AboutSection{
+      margin: 2px;
+    }
+      /* === Mobile About Page === */
+      .AboutSection{
+        margin: 2px;
+      }
 
 
     /* === Mobile Footer Section === */
@@ -786,7 +803,7 @@ body {
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
-      margin-top: 20px;
+      margin-top: 50px;
     }
     .FootSec{
       margin-top: 20px;
@@ -799,19 +816,8 @@ body {
       text-decoration: none;
       color: #ED1457;
     }
-    /* === Settings Mobile Page === */
-    .SettingsManagment{
+    /* === Contact Mobile Page === */
+    #contactForm{
       width:90%;
-    }
-    .formSection{
-      display: flex;
-      flex-direction: column;
-    }
-    .formSection label{
-      width: 200px;
-      text-align: left;      
-    }
-    .formSection input, .formSection textarea{
-      width:100%;
     }
   }

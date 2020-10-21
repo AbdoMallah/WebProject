@@ -17,25 +17,28 @@
             </div> 
         </form>
     </div>
+        {{#if messages.oMSG}}
+    <p>{{messages.oMSG}}</p>
+    {{/if}}
     <div class = "orders"> 
     {{#if ordersValue}}
         {{#each ordersValue}}
         <div id = "orderInfo">
-            <h3>Name: {{BuyerName}}</h3>
-            <p>Email:{{BuyerEmail}}</p>
-            <p>Address: {{BuyerAddress}}</p>
-            <p>Zip Code: {{BuyerZipCode}}</p>
-            <p>Post Id: {{Id}}</p>
+            <h3>Name: {{this.BuyerName}}</h3>
+            <p>Email:{{this.BuyerEmail}}</p>
+            <p>Address: {{this.BuyerAddress}}</p>
+            <p>Zip Code: {{this.BuyerZipCode}}</p>
+            <p>Order Id: {{this.Id}}</p>
             {{#if IfSent}}
             <p> The Product Has Already Been Shipped :D</p>
-            <form  action="deleteOrder/{{Id}}" method="POST">
-                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <form  action="/deleteOrder/{{this.Id}}" method="POST">
+                <input type="hidden" name="_csrf" value="{{../csrfToken}}">
                 <button id="deleteBtn"> Delete </button>
             </form>
             {{else}}
             <p> The Product Has Not Been Shipped Yet :O</p>
-            <form  action="sendOrder/{{Id}}" method="POST">
-                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <form  action="/sendOrder/{{this.Id}}" method="POST">
+                <input type="hidden" name="_csrf" value="{{../csrfToken}}">
                 <button id="sendBtn"> Send Order </button>
             </form>
             {{/if}}
@@ -43,6 +46,6 @@
         {{/each}}
     </div>
     {{else}}
-        <p> No Orders Yet</p>
+    <p> No Orders Yet</p>
     {{/if}}
 </div>

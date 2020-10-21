@@ -9,6 +9,7 @@ const multer = require('multer')
 const moment = require('moment')
 const nodemailer = require('nodemailer')
 const csrf = require('csurf')
+const flash = require('express-flash')
 const db = require('./db.js');
 const app = express()
 const port = 8000
@@ -31,6 +32,8 @@ app.use(function(req,res,next){
     res.locals.isLoggedIn = isLoggedIn
     next()
 })
+/* === Flash === */
+app.use(flash())
 /*=== CSRF === */
 app.use(csrf())
 app.use(function(req, res, next) {
@@ -222,6 +225,7 @@ app.post('/add-category', (req, res) => {
             errMSG.push('You can not add an empty category')
         }
         if(errMSG.length == 0){
+            req.flash('cMSG', 'A category has been added')
             res.redirect('/categories')
         }else{
             const model = {
@@ -266,8 +270,7 @@ app.post('/deleteC', (req, res) => {
                     res.send('The category with Name: '+cName+' has not been deleted from the database')
                 }
                 else{
-                    console.log('The category with Name: '+cName+' has been deleted from the database');
-                    
+                    console.log('The category with Name: '+cName+' has been deleted from the database');     
                 }
             })
         }
@@ -275,6 +278,7 @@ app.post('/deleteC', (req, res) => {
             errMSG.push('You can not delete a category with empty field')
         } 
         if(errMSG.length == 0){
+            req.flash('cMSG', 'A category has been deleted')
             res.redirect('/categories');
         }else{
             const model = {errMSG}
@@ -362,11 +366,12 @@ app.post('/filter-order', (req, res) => {
     }
 })
 
-app.post('deleteOrder/:Id', (req, res) => {
+app.post('/deleteOrder/:Id', (req, res) => {
     const id = req.params.Id
     if(req.session.isLoggedIn){
         db.deleteDataById('orders',1,id,function(error){
             if(!error){
+                req.flash('oMSG', 'An order has been deleted')
                 res.redirect('/orders')
             }else{
                 res.send('Order with id = ' + id + ' has not been deleted , ERROR --> ' + error)
@@ -376,11 +381,12 @@ app.post('deleteOrder/:Id', (req, res) => {
         res.redirect('/login')
     }
 })
-app.post('sendOrder/:Id', (req, res) => {
+app.post('/sendOrder/:Id', (req, res) => {
     const id = req.params.Id
     if(req.session.isLoggedIn){
         db.updateOrderIfSentValue(id, function(error){
             if(!error){
+                req.flash('oMSG', 'An order has been send')
                 res.redirect('/orders')
             }else{
                 res.send('Database table orders has not been updated, ERROR --> ' + error)
@@ -399,7 +405,7 @@ app.get('/index',(req, res) => {
     let showSearchBar = true;
     let IndexPage = true
     const page = parseInt(req.query.page)
-    const limit =5;
+    const limit =12;
     const startIndex = (page - 1) * limit
     const endIndex = page * limit
     const results = {}
@@ -409,7 +415,7 @@ app.get('/index',(req, res) => {
         if(error){ res.send('ERROR ---> ' + error) }
         else{
             if(selectedPosts.length > limit){
-                for(let i = 1; i < ((selectedPosts.length + 2 ) % limit); i++){
+                for(let i =1; i < ((selectedPosts.length * 2 ) / limit); i++){
                     amountPages.push(i)
                 }
                 if(endIndex < selectedPosts.length){

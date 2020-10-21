@@ -7,23 +7,27 @@
         {{/each}}
     </ul>
     {{/if}}
-    <div class = "posts">
-    {{#each results.postsResults}}
-        <a href="/post/{{this.Id}}" class="postLink">
-        <section class = "post"> 
-            <img src="{{this.Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
-            <div id = "postInfo">
-                <h3>{{this.Title}}</h3>
-                
-                <p>Price:{{this.Price}} $</p>
-                <p class="postParagraph">{{this.Description}}</p>
-            </div>
-        </section>
-        </a>
-        {{else}}
-        <p class="btn btn-error">No Content Yet OR All the posts are orders :D </p>
-    {{/each}}  
-    </div>
+     <diV>
+        <h5> Welcome to PickItNGo, Here you will find items you may need with very good price</h5>
+        <div class = "posts">
+        {{#each results.postsResults}}
+            <a href="/post/{{this.Id}}" class="postLink">
+            <section class = "post"> 
+                <img src="{{this.Image}}" class="img-responsive" id="postImage" alt="Post Image"> </img>
+                <div id = "postInfo">
+                    <h3>{{this.Title}}</h3>
+                    
+                    <p>Price:{{this.Price}} $</p>
+                    <p class="postParagraph">{{this.Description}}</p>
+                </div>
+            </section>
+            </a>
+            {{else}}
+            <p class="btn btn-error">No Content Yet OR All the posts are ordered :D </p>
+        {{/each}}  
+        </div>
+        </diV>
+
     <div class = "LastestPosts">
         <h3>Lastest Posts</h3>
         {{#each limitData}}
