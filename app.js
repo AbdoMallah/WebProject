@@ -1,9 +1,9 @@
-const express = require('express') //TO USE express frameWork
-const expresshandlebars = require('express-handlebars') //To Use to handlebars in express
+const express = require('express')
+const expresshandlebars = require('express-handlebars') 
 const session = require('express-session')
 const cookieParser  = require('cookie-parser')
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt') //uses to hash password, don't need it in is Projekt. 
+const bcrypt = require('bcrypt')  
 const path = require('path')
 const multer = require('multer')
 const moment = require('moment')
