@@ -50,7 +50,6 @@ exports.insertintoLogin = function(username ,password, callback){
     loginDb.run(query, placeHolders, function(error){
         callback(error)
     })
-
 }
 
 exports.getLoginInfo = function(callback){
